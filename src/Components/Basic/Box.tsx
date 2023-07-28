@@ -14,8 +14,8 @@ export interface BoxProps {
 	flexDir?: "row" | "column";
 
 	mar?: number | string; // margin
-
 	pad?: number | string; // padding
+	gap?: number | string;
 
 	height?: string;
 	width?: string;
@@ -37,6 +37,7 @@ class Box extends PureComponent<BoxProps> {
 		return (
 			<StyledBox
 				id={props.id}
+				className={props.className}
 				{...props}
 			/>
 		);
@@ -68,6 +69,7 @@ const StyledBox = styled.div<BoxProps>`
 	
 	${({ mar }) => mar !== undefined && `margin: ${parseSize(mar)};`}
 	${({ pad }) => pad !== undefined && `padding: ${parseSize(pad)};`}
+	${({ gap }) => gap !== undefined && `gap: ${parseSize(gap)};`}
 
 	${({ height }) =>
 		height !== undefined &&

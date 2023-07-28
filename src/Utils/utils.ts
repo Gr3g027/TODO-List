@@ -6,13 +6,36 @@ export function parseSize(size: string | number) {
 }
 
 export function saveJson(jsonData: any) {
-    localStorage.setItem("JsonData", JSON.stringify(jsonData))
+    localStorage.setItem("todos", JSON.stringify(jsonData))
 }
 
-export function getJson(): object {
-    let jsonData: any = localStorage.getItem("JsonData")
-    if (jsonData) {
-        jsonData = JSON.parse(jsonData)
+export function getJson(): any {
+    let jsonString: string | null = localStorage.getItem("todos")
+    if (jsonString) {
+        const jsonData: Array<{}> = JSON.parse(jsonString)
+        return jsonData
     }
-    return jsonData
+    return []
+}
+
+export function deleteElementFromJson(item: {id: number}): number{
+    let items = getJson()
+    items.splice(item.id, 1)
+    saveJson(items)
+    return item.id
+}
+
+export function bringSelectedDown(items: Array<{}>, i: number): any {
+    if(i === items.length - 1){
+        console.log("one element in array")
+        return items
+    }
+
+    const tmp = items[i]
+    for (let j = i; j < items.length - 1; j++) {
+        items[i] = items[i + 1];
+    }
+    items[items.length - 1] = tmp
+
+    return items
 }

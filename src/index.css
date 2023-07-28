@@ -2,6 +2,8 @@
 
 html{
     font-family: 'Inter', sans-serif;
+    user-select: none;
+    color: white;
 }
 
 body {
@@ -13,7 +15,6 @@ body {
 
 .selected {
     text-decoration: line-through;
-    text-decoration-color: white;
 }
 
 .deleted {

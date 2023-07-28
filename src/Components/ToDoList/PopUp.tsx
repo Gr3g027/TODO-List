@@ -2,7 +2,6 @@ import React, { PureComponent, ReactNode } from 'react'
 import Box from '../Basic/Box'
 import styled from '@emotion/styled'
 import Button from '../Basic/Button';
-import { getJson, saveJson } from '../../Utils/utils';
 
 interface PopUpProps {
     showHandler: any;
@@ -11,7 +10,6 @@ interface PopUpProps {
 interface State {
     input: string;
     placeHolder: string;
-    isDragging: boolean;
 }
 
 class PopUp extends PureComponent<PopUpProps, State> {
@@ -22,7 +20,6 @@ class PopUp extends PureComponent<PopUpProps, State> {
         this.state = {
             input: '',
             placeHolder: '',
-            isDragging: false,
         }
     }
 
@@ -41,22 +38,21 @@ class PopUp extends PureComponent<PopUpProps, State> {
     }
 
     save = (todo: string) => {
-        if(todo === undefined || ''){
+        if(todo === '' || todo === undefined){
             this.setState({placeHolder: 'Scrivi qui...'})
+        } else {
+            this.props.addToDo(todo)
+            this.props.showHandler(false)
         }
-        this.props.addToDo(todo)
-        this.props.showHandler(false)
-        
     }
 
     render(): ReactNode {
-        const { input, placeHolder, isDragging } = this.state        
+        const { input, placeHolder } = this.state        
         return (
-            <Bg center bgColor='rgba(0, 0, 0, 0.5)' onClick={(event: React.MouseEvent) => {
+            <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
                 event.preventDefault()
-                console.log(event.target, event.relatedTarget, event.currentTarget)
                 
-                if (event.target === event.currentTarget && !isDragging){
+                if (event.target === event.currentTarget){
                     this.props.showHandler(false)
                 }
             }}>
@@ -78,16 +74,17 @@ export default PopUp
 
 const Bg = styled(Box)`
     position: absolute;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     cursor: default;
+    z-index: 100;
 `
 
 const PopUpWindow = styled(Box)`
     position: absolute;
-    width: 500px;
-    height: 300px;
+    padding: 40px;
     border-radius: 32px;
+    gap: 24px;
 `
 
 const TextAreaWrapper = styled(Box)`
@@ -97,9 +94,8 @@ const TextAreaWrapper = styled(Box)`
 
 const TextArea = styled.textarea`
     background-color: transparent;
-    width: 80%;
-    height: 100%;
-    max-height: 100%;
+    width: 429px;
+    height: 155px;
     border: none;
     resize: none;
     color: white;

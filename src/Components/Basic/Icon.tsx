@@ -8,26 +8,27 @@ import styled from '@emotion/styled';
 
 interface IconProps {
     iconName: "addIcon" | "binIcon" | "checkBoxIcon";
+    setChecked?: boolean;
     onClick?: (item?: any) => void;
 }
 
 interface State{
-    checked: boolean;
 }
 
 class Icon extends PureComponent<IconProps, State> {
     constructor(props: IconProps) {
         super(props)
-
+        
         this.state = {
-            checked: false,
+
         }
+        
     }
 
     render(): ReactNode {
         const props = this.props
         const { iconName } = this.props
-        const { checked } = this.state
+        const { setChecked } = this.props
         {switch (iconName) {
             case "addIcon":
                 return(
@@ -47,11 +48,9 @@ class Icon extends PureComponent<IconProps, State> {
             
             case "checkBoxIcon":
                 return(
-                    <IconBox center onClick={() => {
-                        this.setState({checked: !checked})
-                    }}>
+                    <IconBox center>
                     {
-                        checked ? 
+                        setChecked ? 
                         <Ico src={checkBoxOn} {...props}/>
                         : 
                         <Ico src={checkBoxOff} {...props}/>
@@ -83,4 +82,7 @@ const IconBox = styled(Box)`
 const Ico = styled.img`
     width: 40px;
     height: 40px;
+    transition: 3s;
+
+    ${({ onClick }) => !!onClick && `cursor: pointer;`}
 `

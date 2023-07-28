@@ -1,14 +1,16 @@
 import React, { PureComponent, ReactNode } from 'react'
-import Box from './Box'
 import styled from '@emotion/styled'
+import Box from './Box'
 import Text from './Text';
 import Icon from './Icon';
+import { MotionStyle } from 'framer-motion';
 
 export interface BtnProps {
     action: any;
     text: string;
     actionValue?: any;
     icon?: "addIcon" | "binIcon" | "checkBoxIcon" | undefined;
+    style?: MotionStyle
 }
 interface State {}
 
@@ -24,7 +26,7 @@ class Button extends PureComponent<BtnProps, State> {
     render(): ReactNode {
         const { text, icon, action, actionValue } = this.props
         return (
-            <StyledButton center onClick={() => {
+            <StyledButton onClick={() => {
                 actionValue ? action(actionValue) : action()
             }}>
                 <BtnContainer flex flexDir='row' center>
@@ -38,11 +40,19 @@ class Button extends PureComponent<BtnProps, State> {
 
 export default Button
 
-const StyledButton = styled(Box)`
+const StyledButton = styled.button`
     background-color: #716fb2;
     box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
     border-radius: 32px;
+    border: none;
     cursor: pointer;
+    transition: 0.5s;
+    :focus {
+        border: 1px solid white;
+    }
+    :hover { 
+        transform: scale(1.05)
+    }
 `
 
 const TextMedium = styled(Text)`
