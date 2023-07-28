@@ -4,7 +4,9 @@ import { parseSize } from "../../Utils/utils";
 
 export interface BoxProps {
 	onClick?: (item?: any) => void;
-	children?: React.ReactNode;
+	children?: React.ReactNode | any;
+	className?: string;
+	id?: any;
 
 	center?: boolean;
 
@@ -31,9 +33,10 @@ export interface BoxProps {
 
 class Box extends PureComponent<BoxProps> {
 	render(): ReactNode {
-		const props = this.props;
+		const props = this.props
 		return (
 			<StyledBox
+				id={props.id}
 				{...props}
 			/>
 		);
@@ -48,7 +51,7 @@ const StyledBox = styled.div<BoxProps>`
 
 	// FLEX
 	${({ flex }) => flex && `display: flex; flex-shrink: 0;`}
-	${({ flexDir }) => `flex-direction: ${flexDir};`};
+	${({ flexDir }) =>  flexDir && `flex-direction: ${flexDir};`};
 
 
     ${({ hideScrollBar }) =>

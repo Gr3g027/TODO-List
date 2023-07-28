@@ -6,8 +6,6 @@ import {
     motion,
 } from "framer-motion";
 
-import { PropsOf, Theme } from '@emotion/react';
-
 export interface TextProps {
     children?: React.ReactNode;
 
@@ -31,6 +29,7 @@ class Text extends PureComponent<TextProps> {
 export default Text
 
 const StyledText = styled.p<TextProps>`
+    margin: 0px;
     ${({ fontSize }) => fontSize && `font-size: ${fontSize};`}
     ${({ bold }) => bold && `font-weight: ${bold};`}
     ${({ color }) => color && `color: ${color};`}
