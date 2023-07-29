@@ -2,6 +2,7 @@ import React, { PureComponent, ReactNode } from 'react'
 import Box from '../Basic/Box'
 import styled from '@emotion/styled'
 import Button from '../Basic/Button';
+import Text from '../Basic/Text';
 
 interface PopUpProps {
     showHandler: any;
@@ -63,7 +64,9 @@ class PopUp extends PureComponent<PopUpProps, State> {
                             this.setState({input: event.target.value})
                         }} />
                     </TextAreaWrapper>
-                    <Button action={this.save} actionValue={input} text='Salva'/>
+                    <SaveBtn action={this.save} actionValue={input}>
+                        <Text className='text-medium'>Salva</Text>
+                    </SaveBtn>
                 </PopUpWindow>
             </Bg>
         )
@@ -103,4 +106,8 @@ const TextArea = styled.textarea`
     :focus{
         outline: none;
     }
+`
+
+const SaveBtn = styled(Button)`
+    padding: 8px 32px;
 `

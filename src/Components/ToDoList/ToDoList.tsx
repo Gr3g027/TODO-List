@@ -3,12 +3,12 @@ import styled from '@emotion/styled'
 
 import Box from '../Basic/Box'
 import Text from '../Basic/Text'
-import Icon from '../Basic/Icon'
 
 import PopUp from './PopUp'
 import Button from '../Basic/Button'
 import ToDoElement from './ToDoElement'
 import { bringSelectedDown, deleteElementFromJson, getJson, saveJson } from '../../Utils/utils'
+import Icon from '../Basic/Icon'
 
 // import { saveJson, getJson } from '../../Utils/utils'
 
@@ -33,12 +33,9 @@ class ToDoList extends PureComponent<Props, State> {
         if (todoList) {
             this.setState({todos: todoList})
         }
-
-        console.log("MOUNTED", todoList)
     }
 
     componentDidUpdate(): void {
-        console.log("UPDATE")
         saveJson(this.state.todos)
     }
     
@@ -53,16 +50,18 @@ class ToDoList extends PureComponent<Props, State> {
             text: text,
             done: false,
         }
-
         let newList = [todo, ...todoList]
         this.setState({todos: newList})
     }
 
     deleteTodo = (index: number) => {
         const todoList = getJson()
+        const todoToDel = todoList.find((todo: any) => todo.id === todoList[index].id)
         todoList.splice(index, 1)
-
+        
         this.setState({todos: todoList})
+
+        return todoToDel
     }
 
     selectToDo = (index: number, elementId: string) => {
@@ -72,23 +71,22 @@ class ToDoList extends PureComponent<Props, State> {
         if (todoElement?.classList.contains("selected") && todoList[index].done){
             todoElement.classList.remove('selected')
             todoList[index].done = false
-            this.setState({todos: todoList})
         }
         else {
             todoElement?.classList.add('selected')
             todoList[index].done = true
-            this.setState({todos: todoList})
+            let todo = this.deleteTodo(index)
+            this.setState({todos: [...todoList, todo]})
         }
 
-        // bringSelectedDown(todoList, index)
+        this.setState({todos: todoList})
     }
 
-    // updateOrder = () => {
-    //     const todoList: Array<{id: string, text: string, done: boolean}> = getJson()
-
-    //     let filteredList = todoList.sort((a, b) => (a.done && !b.done ? 1 : b.done && !a.done ? -1 : 0))
-    //     console.log(filteredList)
-    // };
+    updateOrder = (todoList:  Array<{id: string, text: string, done: boolean}>) => {
+        todoList.sort((a, b) => Number(a.done) - Number(b.done));
+        console.log("SORTED LIST", todoList)
+        this.setState({todos: todoList})
+    };
 
     render(): ReactNode {
         const showPopUP = this.state.showPopUp
@@ -97,19 +95,19 @@ class ToDoList extends PureComponent<Props, State> {
         return (
             <>
                 { showPopUP && <PopUp addToDo={this.addToDo} showHandler={this.showHandler}/>}
-                <Box center flexDir='column' pad={"8vw 15vh"} >
-                    <ExeternalContainer bgColor='#242424' borderRadius={50}>
+                <Box center flexDir='column' pad={"8vw 9vh"}>
+                    <ExeternalContainer>
                         <ToDoContainer flexDir='column'>
-                            <Title>TODO</Title>
+                            <Text className='text-title'>TODO</Text>
                             {
                                 todoList
                                 .map((todo: any, index: number) => {
                                     return(
                                         <ToDoElement 
-                                            key= {"todo-" + index.toString()}
                                             id= {"todo-" + index.toString()}
                                             index={index}
                                             className={todo.done ? 'selected' : ''}
+
                                             todoData={todo} 
                                             deleteAction={this.deleteTodo} 
                                             selectAction={this.selectToDo}
@@ -119,7 +117,10 @@ class ToDoList extends PureComponent<Props, State> {
                             }
                         </ToDoContainer>
                     </ExeternalContainer>
-                    <Button action={this.showHandler} actionValue={true} text='Nuova voce' icon='addIcon'/>
+                    <NewTodoBtn center action={this.showHandler} actionValue={true}>
+                        <Icon iconName='addIcon'/>
+                        <Text className='text-medium'>Nuova Voce</Text>
+                    </NewTodoBtn>
                 </Box>
             </>
         )
@@ -129,11 +130,13 @@ class ToDoList extends PureComponent<Props, State> {
 export default ToDoList
 
 const ExeternalContainer = styled(Box)`
+    background-color: #242424;
     box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
-    max-width: 80%;
+    
+    border-radius: 50px;
     width: 80%;
     padding: 60px 140px;
-    margin: 50px;
+    margin-bottom: 50px;
 `
 
 const ToDoContainer = styled(Box)`
@@ -143,18 +146,8 @@ const ToDoContainer = styled(Box)`
     gap: 40px;
 `
 
-const Title = styled(Text)`
-    text-align: left;
-    width: 100%;
-    margin: 20px 0px;
-    font-size: 54px;
-    font-weight: bold;
-    color: white;
-`
-
-const RegularText = styled(Text)`
-    font-size: 24px; 
-    font-weight: normal;
-    color: white;
-    margin: 15px 0px;
+const NewTodoBtn = styled(Button)`
+    gap: 24px;
+    flex-direction: row;
+    padding: 16px 32px;
 `

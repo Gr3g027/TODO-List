@@ -29,25 +29,20 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
     render(): ReactNode {
         const { todoData, selectAction, deleteAction, id, index } = this.props
         const checked = this.state.checked
+
+        
         return (
             <Box gap={24} id={id} className={this.props.className}>
                 <Icon iconName='binIcon' onClick={() => deleteAction(index)}/> 
                 <Icon iconName='checkBoxIcon' setChecked={checked} onClick={() => {
                     selectAction(index, id)
+                    console.log("CHECKED: ", checked)
                     this.setState({checked: !checked})
                 }}/>
-                <RegularText>{todoData.text}</RegularText>
+                <Text className='text-regular' mar={"15px 5px"}>{todoData.text}</Text>
             </Box>
         )
     }
 }
 
 export default ToDoElement
-
-const RegularText = styled(Text)`
-    user-select: text;
-    font-size: 24px; 
-    font-weight: normal;
-    color: white;
-    margin: 15px 0px;
-`

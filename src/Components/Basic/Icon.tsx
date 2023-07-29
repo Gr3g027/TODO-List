@@ -12,19 +12,7 @@ interface IconProps {
     onClick?: (item?: any) => void;
 }
 
-interface State{
-}
-
-class Icon extends PureComponent<IconProps, State> {
-    constructor(props: IconProps) {
-        super(props)
-        
-        this.state = {
-
-        }
-        
-    }
-
+class Icon extends PureComponent<IconProps> {
     render(): ReactNode {
         const props = this.props
         const { iconName } = this.props

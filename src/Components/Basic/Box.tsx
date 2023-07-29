@@ -21,7 +21,6 @@ export interface BoxProps {
 	width?: string;
 
 	hideScrollBar?: boolean;
-	animation?: "fade" | "slide" | "vibrate";
 
 	borderRadius?: number | string;
 

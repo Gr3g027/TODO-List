@@ -13,12 +13,32 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+    user-select: text;
+}
+
 .selected {
     text-decoration: line-through;
 }
 
-.deleted {
-    visibility: hidden;
+.text-title {
+    text-align: left;
+    width: 100%;
+    font-size: 54px;
+    font-weight: bold;
+    color: white;
+}
+
+.text-regular{
+    font-size: 24px; 
+    font-weight: normal;
+    color: white;
+}
+
+.text-medium{
+    font-size: 24px; 
+    font-weight: 400;
+    color: #01001e;
 }
 
 *::-webkit-scrollbar {
