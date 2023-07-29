@@ -20,24 +20,17 @@ interface State {
 class ToDoElement extends PureComponent<ToDoProps, State> {
     constructor(props: ToDoProps) {
         super(props)
-        
-        this.state = {
-            checked: this.props.todoData.done,
-        }
     }
 
     render(): ReactNode {
         const { todoData, selectAction, deleteAction, id, index } = this.props
-        const checked = this.state.checked
+        const checked = this.props.todoData.done
 
-        
         return (
-            <Box gap={24} id={id} className={this.props.className}>
+            <Box gap={24} key={id} className={this.props.className}>
                 <Icon iconName='binIcon' onClick={() => deleteAction(index)}/> 
-                <Icon iconName='checkBoxIcon' setChecked={checked} onClick={() => {
+                <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
                     selectAction(index, id)
-                    console.log("CHECKED: ", checked)
-                    this.setState({checked: !checked})
                 }}/>
                 <Text className='text-regular' mar={"15px 5px"}>{todoData.text}</Text>
             </Box>

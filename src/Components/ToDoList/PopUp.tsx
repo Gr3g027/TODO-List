@@ -80,7 +80,7 @@ const Bg = styled(Box)`
     width: 100%;
     height: 100%;
     cursor: default;
-    z-index: 100;
+    z-index: 10;
 `
 
 const PopUpWindow = styled(Box)`

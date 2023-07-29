@@ -17,25 +17,3 @@ export function getJson(): any {
     }
     return []
 }
-
-export function deleteElementFromJson(item: {id: number}): number{
-    let items = getJson()
-    items.splice(item.id, 1)
-    saveJson(items)
-    return item.id
-}
-
-export function bringSelectedDown(items: Array<{}>, i: number): any {
-    if(i === items.length - 1){
-        console.log("one element in array")
-        return items
-    }
-
-    const tmp = items[i]
-    for (let j = i; j < items.length - 1; j++) {
-        items[i] = items[i + 1];
-    }
-    items[items.length - 1] = tmp
-
-    return items
-}

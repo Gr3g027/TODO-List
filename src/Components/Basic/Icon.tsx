@@ -1,14 +1,13 @@
 import React, { PureComponent, ReactNode } from 'react'
-import addIcon from '../../Imgs/Adds.svg'
-import binIcon from '../../Imgs/Bin.svg'
-import checkBoxOff from '../../Imgs/Checkbox_Off.svg'
-import checkBoxOn from '../../Imgs/Checkbox_On.svg'
+import { Icons } from '../../Utils/icons';
 import Box from './Box';
 import styled from '@emotion/styled';
 
 interface IconProps {
-    iconName: "addIcon" | "binIcon" | "checkBoxIcon";
-    setChecked?: boolean;
+    iconName: string
+              | "addIcon"
+              | "binIcon"
+              | "checkBoxIcon";
     onClick?: (item?: any) => void;
 }
 
@@ -16,12 +15,11 @@ class Icon extends PureComponent<IconProps> {
     render(): ReactNode {
         const props = this.props
         const { iconName } = this.props
-        const { setChecked } = this.props
         {switch (iconName) {
             case "addIcon":
                 return(
                     <IconBox center>
-                        <Ico src={addIcon} {...props}/>
+                        <Ico src={Icons.addIcon} {...props}/>
                     </IconBox>
                 )
                 break;
@@ -29,25 +27,27 @@ class Icon extends PureComponent<IconProps> {
             case "binIcon":
                 return(
                     <IconBox center>
-                        <Ico src={binIcon} {...props} />
+                        <Ico src={Icons.binIcon} {...props} />
                     </IconBox>
                 )
                 break;
             
-            case "checkBoxIcon":
+            case "checkBoxIconOn":
                 return(
                     <IconBox center>
-                    {
-                        setChecked ? 
-                        <Ico src={checkBoxOn} {...props}/>
-                        : 
-                        <Ico src={checkBoxOff} {...props}/>
-                    }
+                        <Ico src={Icons.checkBoxOn} {...props} />
                     </IconBox>
                 )
-                
                 break;
-            
+                
+            case "checkBoxIconOff":
+                return(
+                    <IconBox center>
+                        <Ico src={Icons.checkBoxOff} {...props} />
+                    </IconBox>
+                )
+                break;
+
             default:
                 return(<>Icon not found</>)
                 break;

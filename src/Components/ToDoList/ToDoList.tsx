@@ -7,7 +7,7 @@ import Text from '../Basic/Text'
 import PopUp from './PopUp'
 import Button from '../Basic/Button'
 import ToDoElement from './ToDoElement'
-import { bringSelectedDown, deleteElementFromJson, getJson, saveJson } from '../../Utils/utils'
+import { getJson, saveJson } from '../../Utils/utils'
 import Icon from '../Basic/Icon'
 
 // import { saveJson, getJson } from '../../Utils/utils'
@@ -66,25 +66,39 @@ class ToDoList extends PureComponent<Props, State> {
 
     selectToDo = (index: number, elementId: string) => {
         const todoList = getJson()
-        const todoElement = document.getElementById(elementId)
         
-        if (todoElement?.classList.contains("selected") && todoList[index].done){
-            todoElement.classList.remove('selected')
+        
+        if (todoList[index].done) {
+            const todoElement = document.getElementById('todo-' + (index).toString())
+            todoElement?.classList.remove('selected')
+            // console.log("TODO ELEMENT UNSELECTED", todoElement)
             todoList[index].done = false
-        }
-        else {
+            this.updateOrder(todoList)
+        } else {
+            const todoElement = document.getElementById('todo-' + (todoList.length - 1).toString())
             todoElement?.classList.add('selected')
+            // console.log("TODO ELEMENT SELECTED", todoElement)
             todoList[index].done = true
-            let todo = this.deleteTodo(index)
-            this.setState({todos: [...todoList, todo]})
+            this.updateOrder(todoList)
         }
+
+        // if (todoElement?.classList.contains("selected") && todoList[index].done){
+        //     todoElement.classList.remove('selected')
+        //     console.log("TODO ELEMENT UNSELECTED", todoElement)
+        //     todoList[index].done = false
+        // }
+        // else {
+        //     todoElement?.classList.add('selected')
+        //     console.log("TODO ELEMENT SELECTED", todoElement)
+        //     todoList[index].done = true
+        //     this.updateOrder(todoList)
+        // }
 
         this.setState({todos: todoList})
     }
 
     updateOrder = (todoList:  Array<{id: string, text: string, done: boolean}>) => {
         todoList.sort((a, b) => Number(a.done) - Number(b.done));
-        console.log("SORTED LIST", todoList)
         this.setState({todos: todoList})
     };
 
@@ -95,7 +109,7 @@ class ToDoList extends PureComponent<Props, State> {
         return (
             <>
                 { showPopUP && <PopUp addToDo={this.addToDo} showHandler={this.showHandler}/>}
-                <Box center flexDir='column' pad={"8vw 9vh"}>
+                <Box center flexDir='column' pad={"6vw 8vh"}>
                     <ExeternalContainer>
                         <ToDoContainer flexDir='column'>
                             <Text className='text-title'>TODO</Text>
