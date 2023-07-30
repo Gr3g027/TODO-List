@@ -1,21 +1,20 @@
-import React, { PureComponent, ReactNode } from 'react'
+import { PureComponent, ReactNode } from 'react'
 import styled from '@emotion/styled'
+import { nanoid } from 'nanoid'
 
 import Box from '../Basic/Box'
 import Text from '../Basic/Text'
-
-import PopUp from './PopUp'
 import Button from '../Basic/Button'
-import ToDoElement from './ToDoElement'
-import { getJson, saveJson } from '../../Utils/utils'
 import Icon from '../Basic/Icon'
 
-// import { saveJson, getJson } from '../../Utils/utils'
+import PopUp from './PopUp'
+import ToDoElement from './ToDoElement'
+import { getJson, saveJson } from '../../Utils/utils'
 
 interface Props {}
 interface State {
     showPopUp: boolean;
-    todos: Array<{id: string, text: string, done: boolean}>;
+    todos: Array<any>;
 }
 
 class ToDoList extends PureComponent<Props, State> {
@@ -29,6 +28,7 @@ class ToDoList extends PureComponent<Props, State> {
     }
 
     componentDidMount(): void {
+        // Retriveing localStorage data, if it exists
         const todoList = getJson()
         if (todoList) {
             this.setState({todos: todoList})
@@ -36,17 +36,20 @@ class ToDoList extends PureComponent<Props, State> {
     }
 
     componentDidUpdate(): void {
+        // Saving in local storage every time the state changes
         saveJson(this.state.todos)
     }
     
     showHandler = (value: boolean) => {
+        // Used for updating show state in child component "PopUp"
         this.setState({showPopUp: value})
     }
 
     addToDo = (text: string) => {
+        // Handles creation of a todo element
         const todoList = this.state.todos
         const todo = {
-            id: "todo-" + todoList.length.toString(),
+            id: `todo-${nanoid(5)}`,
             text: text,
             done: false,
         }
@@ -54,71 +57,55 @@ class ToDoList extends PureComponent<Props, State> {
         this.setState({todos: newList})
     }
 
+    selectToDo = (index: number) => {
+        /* Handles the selection of a todo element */
+        
+        const todoList = getJson()
+        //changing 'selected' class by modifying 'done' property
+        todoList[index].done ? todoList[index].done = false : todoList[index].done = true
+
+        //update order
+        this.updateOrder(todoList)
+    }
+
     deleteTodo = (index: number) => {
+        /* Handles the deletion of a todo element */
         const todoList = getJson()
         const todoToDel = todoList.find((todo: any) => todo.id === todoList[index].id)
-        todoList.splice(index, 1)
         
+        //delete
+        todoList.splice(index, 1)
         this.setState({todos: todoList})
-
+       
         return todoToDel
     }
 
-    selectToDo = (index: number, elementId: string) => {
-        const todoList = getJson()
-        
-        
-        if (todoList[index].done) {
-            const todoElement = document.getElementById('todo-' + (index).toString())
-            todoElement?.classList.remove('selected')
-            // console.log("TODO ELEMENT UNSELECTED", todoElement)
-            todoList[index].done = false
-            this.updateOrder(todoList)
-        } else {
-            const todoElement = document.getElementById('todo-' + (todoList.length - 1).toString())
-            todoElement?.classList.add('selected')
-            // console.log("TODO ELEMENT SELECTED", todoElement)
-            todoList[index].done = true
-            this.updateOrder(todoList)
-        }
-
-        // if (todoElement?.classList.contains("selected") && todoList[index].done){
-        //     todoElement.classList.remove('selected')
-        //     console.log("TODO ELEMENT UNSELECTED", todoElement)
-        //     todoList[index].done = false
-        // }
-        // else {
-        //     todoElement?.classList.add('selected')
-        //     console.log("TODO ELEMENT SELECTED", todoElement)
-        //     todoList[index].done = true
-        //     this.updateOrder(todoList)
-        // }
-
-        this.setState({todos: todoList})
-    }
-
-    updateOrder = (todoList:  Array<{id: string, text: string, done: boolean}>) => {
-        todoList.sort((a, b) => Number(a.done) - Number(b.done));
+    updateOrder = (todoList:  Array<any>) => {
+        /* Updates the array order, sorts by boolean value 'done' */
+        todoList.sort((a, b) => Number(a.done) - Number(b.done)); //false-first
         this.setState({todos: todoList})
     };
 
     render(): ReactNode {
-        const showPopUP = this.state.showPopUp
+        const { showPopUp } = this.state
         const todoList = this.state.todos
 
         return (
             <>
-                { showPopUP && <PopUp addToDo={this.addToDo} showHandler={this.showHandler}/>}
-                <Box center flexDir='column' pad={"6vw 8vh"}>
-                    <ExeternalContainer>
-                        <ToDoContainer flexDir='column'>
+                { /* Shows 'PopUp' component if state 'showPopUp' is true */
+                    showPopUp && <PopUp addToDo={this.addToDo} showHandler={this.showHandler}/> } 
+                <ExternalContainer center>
+                    <ToDoContainer>
+                        <ListContainer>
                             <Text className='text-title'>TODO</Text>
                             {
-                                todoList
-                                .map((todo: any, index: number) => {
+                                // Rendering ToDo list
+                                todoList.map((todo: any, index: number) => { 
                                     return(
                                         <ToDoElement 
-                                            id= {"todo-" + index.toString()}
+                                            key={todo.id}
+                                            
+                                            id={todo.id}
                                             index={index}
                                             className={todo.done ? 'selected' : ''}
 
@@ -129,13 +116,17 @@ class ToDoList extends PureComponent<Props, State> {
                                     )
                                 })
                             }
-                        </ToDoContainer>
-                    </ExeternalContainer>
-                    <NewTodoBtn center action={this.showHandler} actionValue={true}>
-                        <Icon iconName='addIcon'/>
-                        <Text className='text-medium'>Nuova Voce</Text>
-                    </NewTodoBtn>
-                </Box>
+                        </ListContainer>
+                    </ToDoContainer>
+
+                    {/* New ToDo button */}
+                    <Button center action={this.showHandler} actionValue={true}>
+                        <BtnInnerContainer>
+                            <Icon iconName='addIcon'/>
+                            <Text className='text-medium'>Nuova Voce</Text>
+                        </BtnInnerContainer>
+                    </Button>
+                </ExternalContainer>
             </>
         )
     }
@@ -143,24 +134,31 @@ class ToDoList extends PureComponent<Props, State> {
 
 export default ToDoList
 
-const ExeternalContainer = styled(Box)`
-    background-color: #242424;
-    box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
-    
-    border-radius: 50px;
-    width: 80%;
-    padding: 60px 140px;
-    margin-bottom: 50px;
+const ExternalContainer = styled(Box)`
+    padding: 8vw 9vh;
+    flex-direction: column;
+    gap: 24px;
 `
 
 const ToDoContainer = styled(Box)`
+    background-color: #242424;
+    box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
+    border-radius: 32px;
+    padding: 80px 160px;
+
+    width: 70%;
+`
+
+const ListContainer = styled(Box)`
     width: 100%;
     max-height: 50vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     gap: 40px;
+    flex-direction: column;
 `
 
-const NewTodoBtn = styled(Button)`
+const BtnInnerContainer = styled(Box)`
     gap: 24px;
     flex-direction: row;
     padding: 16px 32px;

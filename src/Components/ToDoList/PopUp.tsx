@@ -1,8 +1,9 @@
 import React, { PureComponent, ReactNode } from 'react'
-import Box from '../Basic/Box'
 import styled from '@emotion/styled'
-import Button from '../Basic/Button';
+
+import Box from '../Basic/Box'
 import Text from '../Basic/Text';
+import Button from '../Basic/Button';
 
 interface PopUpProps {
     showHandler: any;
@@ -14,6 +15,7 @@ interface State {
 }
 
 class PopUp extends PureComponent<PopUpProps, State> {
+    /* Pop Up component, handles the pop-up logic */
     constructor(props: PopUpProps) {
         super(props)
         this.escEvent = this.escEvent.bind(this);
@@ -25,24 +27,31 @@ class PopUp extends PureComponent<PopUpProps, State> {
     }
 
     componentDidMount(): void {
+        //adding exit event
         document.addEventListener("keydown", this.escEvent, false);
     }
 
     componentWillUnmount(){
+        //removing exit event
         document.removeEventListener("keydown", this.escEvent, false);
     }
 
     escEvent = (event: any) => {
+        /* Event for exiting the PopUp on 'ESC' key pressed */
         if (event.key === "Escape"){
             this.props.showHandler(false)
         }
     }
 
-    save = (todo: string) => {
+    saveTodo = (todo: string) => {
+        /* Handles the saving of a new todo */
         if(todo === '' || todo === undefined){
             this.setState({placeHolder: 'Scrivi qui...'})
         } else {
+            //using props to create the todo element
             this.props.addToDo(todo)
+
+            //exiting PopUp window
             this.props.showHandler(false)
         }
     }
@@ -59,12 +68,12 @@ class PopUp extends PureComponent<PopUpProps, State> {
             }}>
                 <PopUpWindow center flexDir="column" bgColor='#2b2c2e'>
                     <TextAreaWrapper center>
-                        <TextArea name="todo" placeholder={placeHolder} autoFocus                         
+                        <TextArea name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
                         onChange={(event) => {
                             this.setState({input: event.target.value})
                         }} />
                     </TextAreaWrapper>
-                    <SaveBtn action={this.save} actionValue={input}>
+                    <SaveBtn action={this.saveTodo} actionValue={input}>
                         <Text className='text-medium'>Salva</Text>
                     </SaveBtn>
                 </PopUpWindow>
@@ -101,8 +110,7 @@ const TextArea = styled.textarea`
     height: 155px;
     border: none;
     resize: none;
-    color: white;
-    font-size: 24px;
+    
     :focus{
         outline: none;
     }

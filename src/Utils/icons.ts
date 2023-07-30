@@ -1,3 +1,5 @@
+/* Icon export file */
+
 import addIcon from '../Imgs/Adds.svg'
 import binIcon from '../Imgs/Bin.svg'
 import checkBoxOff from '../Imgs/Checkbox_Off.svg'

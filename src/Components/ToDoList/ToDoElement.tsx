@@ -1,7 +1,7 @@
-import React, { PureComponent, ReactNode } from 'react'
+import { PureComponent, ReactNode } from 'react'
+
 import Icon from '../Basic/Icon'
 import Box from '../Basic/Box';
-import styled from '@emotion/styled';
 import Text from '../Basic/Text';
 
 interface ToDoProps {
@@ -18,20 +18,23 @@ interface State {
 }
 
 class ToDoElement extends PureComponent<ToDoProps, State> {
-    constructor(props: ToDoProps) {
-        super(props)
-    }
-
     render(): ReactNode {
         const { todoData, selectAction, deleteAction, id, index } = this.props
         const checked = this.props.todoData.done
 
         return (
-            <Box gap={24} key={id} className={this.props.className}>
+            /* ToDo element */
+            <Box gap={24} borderRadius={50} id={id} className={this.props.className}>
+
+                {/* delete icon */}
                 <Icon iconName='binIcon' onClick={() => deleteAction(index)}/> 
+
+                {/* checkbox icon */}
                 <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
-                    selectAction(index, id)
+                    selectAction(index)
                 }}/>
+
+                {/* todo-text */}
                 <Text className='text-regular' mar={"15px 5px"}>{todoData.text}</Text>
             </Box>
         )

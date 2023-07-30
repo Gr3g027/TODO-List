@@ -1,13 +1,15 @@
-import React, { PureComponent, ReactNode } from 'react'
-import { Icons } from '../../Utils/icons';
-import Box from './Box';
+import { PureComponent, ReactNode } from 'react'
 import styled from '@emotion/styled';
+
+import Box from './Box';
+
+import { Icons } from '../../Utils/icons';
 
 interface IconProps {
     iconName: string
-              | "addIcon"
-              | "binIcon"
-              | "checkBoxIcon";
+    | "addIcon"
+    | "binIcon"
+    | "checkBoxIcon";
     onClick?: (item?: any) => void;
 }
 
@@ -15,44 +17,41 @@ class Icon extends PureComponent<IconProps> {
     render(): ReactNode {
         const props = this.props
         const { iconName } = this.props
-        {switch (iconName) {
+
+        /* Icon component, returns correct icon based on 'iconName' prop */
+        switch (iconName) {
             case "addIcon":
-                return(
+                return (
                     <IconBox center>
-                        <Ico src={Icons.addIcon} {...props}/>
+                        <Ico src={Icons.addIcon} {...props} />
                     </IconBox>
                 )
-                break;
-            
+
             case "binIcon":
-                return(
+                return (
                     <IconBox center>
                         <Ico src={Icons.binIcon} {...props} />
                     </IconBox>
                 )
-                break;
-            
+
             case "checkBoxIconOn":
-                return(
+                return (
                     <IconBox center>
                         <Ico src={Icons.checkBoxOn} {...props} />
                     </IconBox>
                 )
-                break;
-                
+
             case "checkBoxIconOff":
-                return(
+                return (
                     <IconBox center>
                         <Ico src={Icons.checkBoxOff} {...props} />
                     </IconBox>
                 )
-                break;
 
             default:
-                return(<>Icon not found</>)
-                break;
-        }}
-                
+                return (<img alt='IconError' />)
+        }
+
     }
 }
 
@@ -72,5 +71,5 @@ const Ico = styled.img`
     height: 40px;
     transition: 3s;
 
-    ${({ onClick }) => !!onClick && `cursor: pointer;`}
+    ${({ onClick }) => onClick && `cursor: pointer;`}
 `
