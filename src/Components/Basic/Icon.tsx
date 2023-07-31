@@ -69,7 +69,6 @@ const IconBox = styled(Box)`
 const Ico = styled.img`
     width: 40px;
     height: 40px;
-    transition: 3s;
 
     ${({ onClick }) => onClick && `cursor: pointer;`}
 `

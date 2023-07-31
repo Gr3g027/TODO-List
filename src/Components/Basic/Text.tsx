@@ -9,6 +9,7 @@ export interface TextProps extends BoxProps {
     fontSize?: string;
     bold?: string | number;
     color?: string;
+    textAlign?: string;
 }
 
 class Text extends PureComponent<TextProps> {
@@ -27,10 +28,14 @@ export default Text
 
 const StyledText = styled.p<TextProps>`
     ${({ fontSize }) => fontSize && `font-size: ${fontSize};`}
+    ${({ textAlign }) => textAlign && `text-align: ${textAlign};`}
     ${({ bold }) => bold && `font-weight: ${bold};`}
     ${({ color }) => color && `color: ${color};`}
     
     ${({ mar }) => mar ? `margin: ${parseSize(mar)};` : `margin: auto;`}
 	${({ pad }) => pad && `padding: ${parseSize(pad)};`}
 	${({ gap }) => gap && `gap: ${parseSize(gap)};`}
+
+    ${({ width }) => width && `width: ${parseSize(width)};`}
+    ${({ height }) => height && `width: ${parseSize(height)};`}
 `

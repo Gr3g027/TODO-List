@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import Box from '../Basic/Box'
 import Text from '../Basic/Text';
 import Button from '../Basic/Button';
+import Screen from '../System/Screen';
 
 interface PopUpProps {
     showHandler: any;
@@ -59,25 +60,51 @@ class PopUp extends PureComponent<PopUpProps, State> {
     render(): ReactNode {
         const { input, placeHolder } = this.state        
         return (
-            <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
-                event.preventDefault()
-                
-                if (event.target === event.currentTarget){
-                    this.props.showHandler(false)
-                }
-            }}>
-                <PopUpWindow center flexDir="column" bgColor='#2b2c2e'>
-                    <TextAreaWrapper center>
-                        <TextArea name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
-                        onChange={(event) => {
-                            this.setState({input: event.target.value})
-                        }} />
-                    </TextAreaWrapper>
-                    <SaveBtn action={this.saveTodo} actionValue={input}>
-                        <Text className='text-medium'>Salva</Text>
-                    </SaveBtn>
-                </PopUpWindow>
-            </Bg>
+            <>
+            {Screen.windowWidth < Screen.mobileWidth ? (
+                /* MOBILE */
+                <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
+                    event.preventDefault()
+                    
+                    if (event.target === event.currentTarget){
+                        this.props.showHandler(false)
+                    }
+                }}>
+                    <PopUpWindowMobile center >
+                        <TextAreaWrapperMobile center>
+                            <TextAreaMobile name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
+                            onChange={(event) => {
+                                this.setState({input: event.target.value})
+                            }} />
+                        </TextAreaWrapperMobile>
+                        <SaveBtn action={this.saveTodo} actionValue={input}>
+                            <Text className='text-medium'>Salva</Text>
+                        </SaveBtn>
+                    </PopUpWindowMobile>
+                </Bg>
+            ) : (
+                /* DESKTOP */
+                <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
+                    event.preventDefault()
+                    
+                    if (event.target === event.currentTarget){
+                        this.props.showHandler(false)
+                    }
+                }}>
+                    <PopUpWindow center flexDir="column" bgColor='#2b2c2e'>
+                        <TextAreaWrapper center>
+                            <TextArea name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
+                            onChange={(event) => {
+                                this.setState({input: event.target.value})
+                            }} />
+                        </TextAreaWrapper>
+                        <SaveBtn action={this.saveTodo} actionValue={input}>
+                            <Text className='text-medium'>Salva</Text>
+                        </SaveBtn>
+                    </PopUpWindow>
+                </Bg>
+            )}
+            </>
         )
     }
 }
@@ -118,4 +145,28 @@ const TextArea = styled.textarea`
 
 const SaveBtn = styled(Button)`
     padding: 8px 32px;
+`
+
+const TextAreaWrapperMobile = styled(Box)`
+    width: 80%;
+    height: 90%;
+`
+
+const TextAreaMobile = styled.textarea`
+    background-color: transparent;
+    width: 270px;
+    height: 150px;
+    border: none;
+    resize: none;
+    
+    :focus{
+        outline: none;
+    }
+`
+
+const PopUpWindowMobile = styled(Box)`
+    background-color: #2b2c2e;
+    flex-direction: column;
+    border-radius: 32px;
+    padding: 40px 10px;
 `

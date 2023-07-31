@@ -31,6 +31,8 @@ const StyledButton = styled.button<BoxProps>`
     box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
     border-radius: 32px;
     border: none;
+    text-align: center;
+    align-items: center;
     cursor: pointer;
     transition: 0.2s;
 
@@ -41,7 +43,7 @@ const StyledButton = styled.button<BoxProps>`
     :focus {
         border: 1px solid white;
     }
-    :hover { 
+    :hover {
         transform: scale(1.03);
     }
 `
