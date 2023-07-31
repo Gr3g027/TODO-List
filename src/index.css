@@ -26,16 +26,20 @@ body {
 }
 
 .text-regular{
-    font-size: 24px; 
+    font-size: 17px; 
     font-weight: 400;
     color: white;
     user-select: text;
 }
 
 .text-medium{
-    font-size: 24px; 
+    font-size: 17px; 
     font-weight: 500;
     color: #01001e;
+}
+
+.already-added{
+    opacity: 1;
 }
 
 *::-webkit-scrollbar {
