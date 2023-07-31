@@ -27,7 +27,6 @@ export function SelectAnimation(id: string, ){
 export function DeleteAnimation(id: string){
     gsap.to(`#${id}`, {
         duration: 0.5,
-        y: '-100%',
         opacity: 0,
         ease: 'none',
         onComplete: function() {
