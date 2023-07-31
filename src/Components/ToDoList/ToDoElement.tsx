@@ -1,10 +1,11 @@
 import { PureComponent, ReactNode } from 'react'
 
 import Icon from '../Basic/Icon'
-import Box from '../Basic/Box';
+import Box, { BoxProps } from '../Basic/Box';
 import Text from '../Basic/Text';
+import styled from '@emotion/styled';
 
-interface ToDoProps {
+interface ToDoProps extends BoxProps{
     className?: string;
     id: string;
     index: number;
@@ -14,31 +15,45 @@ interface ToDoProps {
     todoData: any;
 }
 interface State {
-    checked: boolean
+    checked: boolean,
 }
 
 class ToDoElement extends PureComponent<ToDoProps, State> {
     render(): ReactNode {
-        const { todoData, selectAction, deleteAction, id, index } = this.props
+        const props = this.props
         const checked = this.props.todoData.done
 
         return (
             /* ToDo element */
-            <Box gap={24} borderRadius={50} id={id} className={this.props.className}>
+            <ToDo 
+                id={props.id} 
+                className={this.props.className} 
+                >
 
                 {/* delete icon */}
-                <Icon iconName='binIcon' onClick={() => deleteAction(index)}/> 
+                <Icon iconName='binIcon' onClick={() =>{ 
+                    props.deleteAction(props.index)
+                }}/> 
 
                 {/* checkbox icon */}
                 <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
-                    selectAction(index)
+                    props.selectAction(props.index)
                 }}/>
 
                 {/* todo-text */}
-                <Text className='text-regular' mar={"15px 5px"}>{todoData.text}</Text>
-            </Box>
+                <Text className='text-regular' mar={"5 auto"}>{props.todoData.text}</Text>
+            </ToDo>
         )
     }
 }
 
 export default ToDoElement
+
+const ToDo = styled(Box)<BoxProps>`
+    gap: 24px;
+
+    //default properties for animation
+    opacity: 0;
+    transform: translateY(-50px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+`

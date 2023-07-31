@@ -10,11 +10,21 @@ import Icon from '../Basic/Icon'
 import PopUp from './PopUp'
 import ToDoElement from './ToDoElement'
 import { getJson, saveJson } from '../../Utils/utils'
+import {
+    AddAnimation,
+    DeleteAnimation,
+    ListItemsMapAnimation,
+    SelectAnimation
+} from '../../Utils/animation'
 
-interface Props {}
+interface Props { }
 interface State {
     showPopUp: boolean;
     todos: Array<any>;
+
+    added: string;
+    selected: string;
+    deleted: string;
 }
 
 class ToDoList extends PureComponent<Props, State> {
@@ -24,6 +34,10 @@ class ToDoList extends PureComponent<Props, State> {
         this.state = {
             showPopUp: false,
             todos: [],
+
+            added: '',
+            selected: '',
+            deleted: '',
         }
     }
 
@@ -31,18 +45,33 @@ class ToDoList extends PureComponent<Props, State> {
         // Retriveing localStorage data, if it exists
         const todoList = getJson()
         if (todoList) {
-            this.setState({todos: todoList})
+            this.setState({ todos: todoList })
         }
     }
 
-    componentDidUpdate(): void {
-        // Saving in local storage every time the state changes
-        saveJson(this.state.todos)
+    componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+        const { todos, added, selected, deleted } = this.state
+
+        //animation for showing list on refresh
+        todos.map((todo, index) => {
+            ListItemsMapAnimation(index, todo.id)
+        })
+        
+        // Saving in local storage every time the 'todos' state changes
+        if (prevState.todos !== todos) {
+            saveJson(todos);
+        }
+
+        // Animations
+        if (prevState.added !== added)  AddAnimation(added)
+
+        if (prevState.deleted !== deleted) DeleteAnimation(deleted)
+
+        if (prevState.selected !== selected) SelectAnimation(selected)
     }
-    
     showHandler = (value: boolean) => {
         // Used for updating show state in child component "PopUp"
-        this.setState({showPopUp: value})
+        this.setState({ showPopUp: value })
     }
 
     addToDo = (text: string) => {
@@ -53,17 +82,28 @@ class ToDoList extends PureComponent<Props, State> {
             text: text,
             done: false,
         }
-        let newList = [todo, ...todoList]
-        this.setState({todos: newList})
+
+        //set state for the add animation
+        this.setState({ added: todo.id }) 
+
+        //creating two lists so that new todo can be placed before selected ones, but after unselected ones
+        const selectedList = todoList.filter((todo) => todo.done === true)
+        const unselectedList = todoList.filter((todo) => todo.done === false)
+
+        //add
+        let newList = [...unselectedList, todo, ...selectedList]
+        this.setState({ todos: newList })
     }
 
     selectToDo = (index: number) => {
         /* Handles the selection of a todo element */
-        
+
         const todoList = getJson()
         //changing 'selected' class by modifying 'done' property
         todoList[index].done ? todoList[index].done = false : todoList[index].done = true
+        this.setState({ todos: todoList })
 
+        const todoSelected = todoList.find((todo: any) => todo.id === todoList[index].id)
         //update order
         this.updateOrder(todoList)
     }
@@ -71,19 +111,23 @@ class ToDoList extends PureComponent<Props, State> {
     deleteTodo = (index: number) => {
         /* Handles the deletion of a todo element */
         const todoList = getJson()
-        const todoToDel = todoList.find((todo: any) => todo.id === todoList[index].id)
-        
-        //delete
-        todoList.splice(index, 1)
-        this.setState({todos: todoList})
-       
-        return todoToDel
+        const todoDeleted = todoList.find((todo: any) => todo.id === todoList[index].id)
+
+        this.setState({deleted: todoDeleted.id})
+
+        setTimeout(()=>{
+             //delete
+            todoList.splice(index, 1)
+            this.setState({ todos: todoList })
+        }, 700)
+
+        return todoDeleted
     }
 
-    updateOrder = (todoList:  Array<any>) => {
+    updateOrder = (todoList: Array<any>) => {
         /* Updates the array order, sorts by boolean value 'done' */
-        todoList.sort((a, b) => Number(a.done) - Number(b.done)); //false-first
-        this.setState({todos: todoList})
+        todoList.sort((a, b) => Number(a.done) - Number(b.done)) //false-first
+        this.setState({ todos: todoList })
     };
 
     render(): ReactNode {
@@ -93,24 +137,24 @@ class ToDoList extends PureComponent<Props, State> {
         return (
             <>
                 { /* Shows 'PopUp' component if state 'showPopUp' is true */
-                    showPopUp && <PopUp addToDo={this.addToDo} showHandler={this.showHandler}/> } 
+                    showPopUp && <PopUp addToDo={this.addToDo} showHandler={this.showHandler} />}
                 <ExternalContainer center>
                     <ToDoContainer>
-                        <ListContainer>
+                        <ListContainer id='todo-list' flex>
                             <Text className='text-title'>TODO</Text>
                             {
                                 // Rendering ToDo list
-                                todoList.map((todo: any, index: number) => { 
-                                    return(
-                                        <ToDoElement 
+                                todoList.map((todo: any, index: number) => {
+                                    return (
+                                        <ToDoElement
                                             key={todo.id}
-                                            
+
                                             id={todo.id}
                                             index={index}
-                                            className={todo.done ? 'selected' : ''}
+                                            className={todo.done ? 'todo-element selected' : 'todo-element'}
 
-                                            todoData={todo} 
-                                            deleteAction={this.deleteTodo} 
+                                            todoData={todo}
+                                            deleteAction={this.deleteTodo}
                                             selectAction={this.selectToDo}
                                         />
                                     )
@@ -122,7 +166,7 @@ class ToDoList extends PureComponent<Props, State> {
                     {/* New ToDo button */}
                     <Button center action={this.showHandler} actionValue={true}>
                         <BtnInnerContainer>
-                            <Icon iconName='addIcon'/>
+                            <Icon iconName='addIcon' />
                             <Text className='text-medium'>Nuova Voce</Text>
                         </BtnInnerContainer>
                     </Button>
@@ -145,13 +189,12 @@ const ToDoContainer = styled(Box)`
     box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
     border-radius: 32px;
     padding: 80px 160px;
-
     width: 70%;
 `
 
 const ListContainer = styled(Box)`
     width: 100%;
-    max-height: 50vh;
+    max-height: 45vh;
     overflow-y: scroll;
     overflow-x: hidden;
     gap: 40px;
