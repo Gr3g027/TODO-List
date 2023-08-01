@@ -13,6 +13,7 @@ interface PopUpProps {
 interface State {
     input: string;
     placeHolder: string;
+    responsive: boolean;
 }
 
 class PopUp extends PureComponent<PopUpProps, State> {
@@ -24,6 +25,7 @@ class PopUp extends PureComponent<PopUpProps, State> {
         this.state = {
             input: '',
             placeHolder: '',
+            responsive: false,
         }
     }
 
@@ -58,10 +60,10 @@ class PopUp extends PureComponent<PopUpProps, State> {
     }
 
     render(): ReactNode {
-        const { input, placeHolder } = this.state        
+        const { input, placeHolder, responsive } = this.state        
         return (
             <>
-            {Screen.windowWidth < Screen.mobileWidth ? (
+            {responsive ? (
                 /* MOBILE */
                 <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
                     event.preventDefault()
@@ -70,7 +72,7 @@ class PopUp extends PureComponent<PopUpProps, State> {
                         this.props.showHandler(false)
                     }
                 }}>
-                    <PopUpWindowMobile center >
+                    <PopUpWindowMobile center>
                         <TextAreaWrapperMobile center>
                             <TextAreaMobile name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
                             onChange={(event) => {
@@ -148,14 +150,14 @@ const SaveBtn = styled(Button)`
 `
 
 const TextAreaWrapperMobile = styled(Box)`
-    width: 80%;
-    height: 90%;
+    width: 70vw;
+    height: 10vh;
 `
 
 const TextAreaMobile = styled.textarea`
     background-color: transparent;
-    width: 270px;
-    height: 150px;
+    /* width: 270px;
+    height: 150px; */
     border: none;
     resize: none;
     
@@ -168,5 +170,4 @@ const PopUpWindowMobile = styled(Box)`
     background-color: #2b2c2e;
     flex-direction: column;
     border-radius: 32px;
-    padding: 40px 10px;
 `

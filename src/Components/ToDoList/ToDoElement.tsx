@@ -4,7 +4,6 @@ import Icon from '../Basic/Icon'
 import Box, { BoxProps } from '../Basic/Box';
 import Text from '../Basic/Text';
 import styled from '@emotion/styled';
-import Screen from '../System/Screen';
 
 interface ToDoProps extends BoxProps{
     className?: string;
@@ -14,12 +13,13 @@ interface ToDoProps extends BoxProps{
     selectAction: any;
     deleteAction: any;
     todoData: {id: string, text: string, done: boolean};
+
+    responsive?: boolean;
 }
-interface State {
-    checked: boolean,
-}
+interface State {}
 
 class ToDoElement extends PureComponent<ToDoProps, State> {
+
     render(): ReactNode {
         /* ToDo element */
 
@@ -28,11 +28,12 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
 
         return (
             <>
-            {Screen.windowWidth < Screen.mobileWidth ? (
+            {props.responsive ? (
                 /* MOBILE */
                 <ToDoMobile 
                     id={props.id} 
                     className={this.props.className} 
+                    center
                     >
 
                     {/* delete icon */}
@@ -87,12 +88,10 @@ const ToDo = styled(Box)<BoxProps>`
 
 const TextMobile = styled(Text)`
     text-align: left;
-    width: 80%;
 `
 
 const ToDoMobile = styled(Box)<BoxProps>`
     gap: 24px;
-    height: 20px;
 
     //default properties for animation
     opacity: 0;

@@ -16,9 +16,10 @@ import {
     ListItemsMapAnimation,
     SelectAnimation
 } from '../../Utils/animation'
-import Screen from '../System/Screen'
 
-interface Props { }
+interface Props {
+    responsive: boolean;
+}
 interface State {
     showPopUp: boolean;
     todos: Array<any>;
@@ -26,8 +27,6 @@ interface State {
     added: string;
     selected: string;
     deleted: string;
-
-    responsive: boolean;
 }
 
 class ToDoList extends PureComponent<Props, State> {
@@ -41,11 +40,7 @@ class ToDoList extends PureComponent<Props, State> {
             added: '',
             selected: '',
             deleted: '',
-
-            responsive: Screen.windowWidth <= Screen.mobileWidth,
         }
-
-        this.handleResize = this.handleResize.bind(this);
     }
 
     componentDidMount(): void {
@@ -54,38 +49,40 @@ class ToDoList extends PureComponent<Props, State> {
         if (todoList) {
             this.setState({ todos: todoList })
         }
-
-
-        window.addEventListener('resize', this.handleResize);
-    }
-
-    componentWillUnmount(): void {
-        window.removeEventListener('resize', this.handleResize);
     }
 
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
         const { todos, added, selected, deleted } = this.state
 
-        //animation for showing list on refresh
-        todos.map((todo, index) => {
-            ListItemsMapAnimation(index, todo.id)
-        })
         
         // Saving in local storage every time the 'todos' state changes
         if (prevState.todos !== todos) {
             saveJson(todos);
+
+            //animation for showing list on refresh
+            todos.map((todo, index) => {
+                ListItemsMapAnimation(index, todo.id)
+            })
         }
 
         // Animations
-        if (prevState.added !== added) AddAnimation(added)
+        if (prevState.added !== added) {
+            AddAnimation(added)
+        }
 
-        if (prevState.deleted !== deleted) DeleteAnimation(deleted)
+        if (prevState.deleted !== deleted) {
+            const indexOfDel = todos.findIndex((todo) => todo.id === deleted)
+            const todosUnderneath = todos.slice(indexOfDel)
+            DeleteAnimation(deleted, todosUnderneath)
+        }
 
-        if (prevState.selected !== selected) SelectAnimation(selected)
-    }
-
-    handleResize = () => {
-        this.setState({ responsive: Screen.windowWidth >= Screen.mobileWidth});
+        // if (prevState.selected !== selected) {
+        //     const indexOfSel = todos.findIndex((todo) => todo.id === selected)
+        //     const firstDone = todos.findIndex((todo) => todo.done === true && todo.id !== selected)
+        //     const indexToMove = todos.length === 1 ? 0 : firstDone === -1 ? todos.length-1 : firstDone
+        //     const todosUnderneath = todos.length === 1 ? [] : todos.slice(indexOfSel + 1)
+        //     SelectAnimation(selected, todosUnderneath, indexToMove !== -1 ? indexToMove : todos.length)
+        // }
     }
 
     showPopUpHandler = (value: boolean) => {
@@ -150,20 +147,21 @@ class ToDoList extends PureComponent<Props, State> {
     };
 
     render(): ReactNode {
-        const { showPopUp, responsive } = this.state
+        const { showPopUp } = this.state
         const todoList = this.state.todos
-
         return (
             <>
-                { responsive ? (
+                { this.props.responsive ? (
                     /* MOBILE */ <> 
                         { /* Shows 'PopUp' component if state 'showPopUp' is true */
                             showPopUp && <PopUp addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
                         <Box center flexDir='column' height='100%'>
-                            <ToDoContainerMobile>
-                                <ListContainerMobile id='todo-list' center flex>
-                                    <Text width='100%' textAlign='center' className='text-title'>TODO</Text>
-                                    <Line />
+                            <ToDoContainerMobile flex>
+                                <Text width='100%' textAlign='center' className='text-title' mar='30px 0px 0px 0px'>
+                                    TODO
+                                </Text>
+                                <Line />
+                                <ListContainerMobile id='todo-list' >
                                     {
                                         // Rendering ToDo list
                                         todoList.map((todo: any, index: number) => {
@@ -186,7 +184,7 @@ class ToDoList extends PureComponent<Props, State> {
                             </ToDoContainerMobile>
 
                             {/* New ToDo button */}
-                            <Box height='8vh' mar={"30px 0px 0px 0px"}>
+                            <Box height='30%' mar={"30px 0px 0px 0px"}>
                                 <Button action={this.showPopUpHandler} actionValue={true}>
                                     <BtnInnerContainerMobile center>
                                         <Icon iconName='addIcon' />
@@ -202,7 +200,7 @@ class ToDoList extends PureComponent<Props, State> {
                         showPopUp && <PopUp addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
                         <ExternalContainer center>
                             <ToDoContainer>
-                                <ListContainer id='todo-list' flex>
+                                <ListContainer id='todo-list' flex gap={64}>
                                     <Text className='text-title'>TODO</Text>
                                     {
                                         // Rendering ToDo list
@@ -261,7 +259,6 @@ const ListContainer = styled(Box)`
     max-height: 45vh;
     overflow-y: scroll;
     overflow-x: hidden;
-    gap: 40px;
     flex-direction: column;
 `
 
@@ -274,29 +271,43 @@ const BtnInnerContainer = styled(Box)`
 const ToDoContainerMobile = styled(Box)`
     background-color: #242424;
     box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
-    width: 100%;
-    min-height: 85vh;
-    height: 80%;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    width: 90%;
+    height: 80vh;
     border-radius: 0px 0px 32px 32px;
+    padding: 0px 15px;
 `
 
 const ListContainerMobile = styled(Box)`
-    max-width: 80%;
-    width: 80%;
-    max-height: 70%;
-    height: 80%;
-    overflow-y: hidden;
+    overflow-y: scroll;
     overflow-x: hidden;
-    gap: 40px;
+    width: 70%;
+    max-height: 75vh;
     flex-direction: column;
-    padding: 30px 50px;
+    margin: 30px 0px;
+
+    ::-webkit-scrollbar-track {
+        visibility: hidden;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        visibility: hidden;
+    }
 `
 
 const Line = styled.hr`
-    color: #01001e;
-    width: 80%;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 80vw;
 `
 
 const BtnInnerContainerMobile  = styled(Box)`
     padding: 2px 8px;
+`
+
+const List = styled(Box)`
+    flex-direction: column;
+    gap: 40px;
 `

@@ -12,10 +12,22 @@ export function AddAnimation(id: string, ){
     })
 }
 
-export function SelectAnimation(id: string, ){
+export function SelectAnimation(id: string, todosUnderneath: Array<any>, indexToMove: number){
+
+    for (let i = 0; i < indexToMove - 1; i++) {
+        gsap.to(todosUnderneath[i].id, {
+            duration: 0.5,
+            y: -100,
+            onComplete: function() {
+                console.log("Movement of ", todosUnderneath[i].id, " element completed!");
+            }
+        })
+    }
+
+    // console.log(todosUnderneath)
     gsap.from(`#${id}`, {
         duration: 0.5,
-        y: 0,
+        y: ((indexToMove) * 100),
         opacity: 1,
         ease: "power2.out",
         onComplete: function() {
@@ -24,7 +36,17 @@ export function SelectAnimation(id: string, ){
     })
 }
 
-export function DeleteAnimation(id: string){
+export function DeleteAnimation(id: string, todosUnderneath: Array<any>){
+    todosUnderneath.forEach(todo => {
+        gsap.to(todo.id, {
+            duration: 0.5,
+            y: '-100%',
+            onComplete: function() {
+                console.log("Movement of ", todo.id, " element completed!");
+            }
+        })
+    });
+    
     gsap.to(`#${id}`, {
         duration: 0.5,
         opacity: 0,
