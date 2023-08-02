@@ -1,5 +1,24 @@
 import { gsap } from 'gsap'
 
+export function setDefaultValues(list: Array<any>){
+    const timeLine = gsap.timeline()
+
+    list.map((element, index) => {
+        timeLine.set( `#${element.id}`,{
+            height: '60px',
+            marginTop: (index === 0 ? '0px' : '40px'),
+            opacity: 1,
+            display: 'flex',
+            overflow: 'hidden',
+            ease: 'power2.out',
+            onComplete: () => {
+                console.log('DEFAULT VALUES SET!')
+            }
+        })
+    })
+    
+}
+
 export function AddAnimation(id: string, isFirst: boolean, next?: string){
     const timeLine = gsap.timeline()
 
@@ -26,7 +45,11 @@ export function AddAnimation(id: string, isFirst: boolean, next?: string){
 export function DeleteAnimation(id: string, next?: string){  
     const timeLine = gsap.timeline()
 
-    timeLine.to(`#${id}`, {
+    timeLine.fromTo(`#${id}`, {
+        opacity: 1,
+        marginTop: '40px',
+        height: '60px',
+    }, {
         duration: 0.5,
         opacity: 0,
         marginTop: '0px',
@@ -44,7 +67,7 @@ export function DeleteAnimation(id: string, next?: string){
 }
 
 /* Tried to do select animation */
-export function SelectAnimation(id: string, index: number){  
+export function SelectAnimation(id: string, newFirstId: string){  
     const timeLine = gsap.timeline()
 
     timeLine.fromTo(`#${id}`, {
@@ -66,6 +89,12 @@ export function SelectAnimation(id: string, index: number){
             console.log("Select animation complete!")
         }
     })
+
+    if (newFirstId) {
+        timeLine.to(`#${newFirstId}`, {
+            marginTop: '0px'
+        })
+    }
 }
 
 export function ListItemsMapAnimation(index: number, id: string){

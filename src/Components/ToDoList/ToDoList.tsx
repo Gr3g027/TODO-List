@@ -14,6 +14,7 @@ import {
     AddAnimation,
     DeleteAnimation,
     SelectAnimation,
+    setDefaultValues,
 } from '../../Utils/animation'
 
 interface Props {
@@ -48,7 +49,8 @@ class ToDoList extends PureComponent<Props, State> {
         if (todoList) {
             this.setState({ todos: todoList }, () => {
                 // Setting the list visible on refresh
-                this.rightValues() 
+                this.updateOrder(todoList)
+                setDefaultValues(todoList)
             })
         }
     }
@@ -64,7 +66,8 @@ class ToDoList extends PureComponent<Props, State> {
 
         // Refreshing values so that the list stay visible in responsive
         if (prevProps.responsive !== responsive){
-            this.rightValues()
+            this.updateOrder(todos)
+            setDefaultValues(todos)
         }
         
         // Animations
@@ -99,24 +102,13 @@ class ToDoList extends PureComponent<Props, State> {
 
         if (prevState.selected !== selected) {
             /* Select animation setup */
-            if (todos.length !== 1 || selected.index === todos.length - 1){
-                SelectAnimation(selected.id, selected.index)
+            if (todos.length !== 1 || selected.index !== todos.length - 1){
+                SelectAnimation(selected.id, todos[0].id)
             } else {
-                this.rightValues()
+                setDefaultValues(todos)
             }
         }
-    }
-
-    rightValues = () => {
-        //refreshing default values for elements
-        if (this.state.todos[0] && document.getElementById(this.state.todos[0].id) !== null){
-            this.state.todos.map((todo, index) => {
-                const docElement = document.getElementById(todo.id)
-                docElement!.classList.add('todo-element')
-                docElement!.style.marginTop = index === 0 ? '0px' : '40px'
-            })
-        }
-    }        
+    }      
 
     showPopUpHandler = (value: boolean) => {
         // Used for updating show state in child component "PopUp"
@@ -169,10 +161,10 @@ class ToDoList extends PureComponent<Props, State> {
         //changing 'selected' class by modifying 'done' property
         if (todoList[index].done) {
             todoList[index].done = false
-            this.setState({selected: {id: todoList[index].id, index: index }})
+            this.setState({selected: {id: todoList[index].id, index: index}})
         } else {
             todoList[index].done = true
-            this.setState({selected: {id: todoList[index].id, index: index }})
+            this.setState({selected: {id: todoList[index].id, index: index}})
         }
         
         this.setState({ todos: todoList })
