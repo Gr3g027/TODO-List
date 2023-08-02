@@ -67,7 +67,7 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
                     }}/>
 
                     {/* todo-text */}
-                    <Text className='text-regular' mar={"5 auto"}>{props.todoData.text}</Text>
+                    <Text className='text-regular' mar={"5 auto"} textAlign='left'>{props.todoData.text}</Text>
                 </ToDo>
             )}
             
@@ -81,9 +81,9 @@ export default ToDoElement
 const ToDo = styled(Box)<BoxProps>`
     gap: 24px;
 
-    //default properties for animation
     opacity: 0;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    height: 0;
+    display: none;
 `
 
 const TextMobile = styled(Text)`
@@ -93,7 +93,7 @@ const TextMobile = styled(Text)`
 const ToDoMobile = styled(Box)<BoxProps>`
     gap: 24px;
 
-    //default properties for animation
     opacity: 0;
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    height: 0;
+    display: none;
 `

@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+:root{
+    --bg-color: #1f1f1f;
+    --surface-color: #242424;
+    --primary-color: #716fb2;
+    --on-primary-color: #01001e;
+
+    --see-through-color: rgba(0, 0, 0, 0.6);
+
+    --def-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
+}
+
 *{
     font-family: 'Inter', sans-serif;
     user-select: none;
@@ -8,9 +19,13 @@
 
 body {
     margin: 0;
-    background-color: #1f1f1f;
+    background-color: var(--bg-color);;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}::-webkit-scrollbar-track{
+    visibility: hidden;
+}::-webkit-scrollbar-thumb{
+    visibility: hidden;
 }
 
 .selected {
@@ -35,7 +50,7 @@ body {
 .text-medium{
     font-size: 17px; 
     font-weight: 500;
-    color: #01001e;
+    color: var(--on-primary-color);
 }
 
 .already-added{
@@ -52,7 +67,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-    background-color: #ffffff;
+    background-color: white;
     width: 2px;
     border-radius: 20px;
     border: 4px solid transparent;

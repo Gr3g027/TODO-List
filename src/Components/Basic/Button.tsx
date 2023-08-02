@@ -27,8 +27,8 @@ class Button extends PureComponent<BtnProps> {
 export default Button
 
 const StyledButton = styled.button<BoxProps>`
-    background-color: #716fb2;
-    box-shadow: 4px 12px 24px rgba(0, 0, 0, 0.25);
+    background-color: var(--primary-color);
+    box-shadow: var(--def-shadow);
     border-radius: 32px;
     border: none;
     text-align: center;

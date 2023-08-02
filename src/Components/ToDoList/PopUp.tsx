@@ -9,11 +9,11 @@ import Screen from '../System/Screen';
 interface PopUpProps {
     showHandler: any;
     addToDo: any;
+    responsive: boolean;
 }
 interface State {
     input: string;
     placeHolder: string;
-    responsive: boolean;
 }
 
 class PopUp extends PureComponent<PopUpProps, State> {
@@ -25,7 +25,6 @@ class PopUp extends PureComponent<PopUpProps, State> {
         this.state = {
             input: '',
             placeHolder: '',
-            responsive: false,
         }
     }
 
@@ -60,12 +59,12 @@ class PopUp extends PureComponent<PopUpProps, State> {
     }
 
     render(): ReactNode {
-        const { input, placeHolder, responsive } = this.state        
+        const { input, placeHolder } = this.state        
         return (
             <>
-            {responsive ? (
+            {this.props.responsive ? (
                 /* MOBILE */
-                <Bg center bgColor='rgba(0, 0, 0, 60%)' onClick={(event: React.MouseEvent) => {
+                <Bg center  onClick={(event: React.MouseEvent) => {
                     event.preventDefault()
                     
                     if (event.target === event.currentTarget){
@@ -93,7 +92,7 @@ class PopUp extends PureComponent<PopUpProps, State> {
                         this.props.showHandler(false)
                     }
                 }}>
-                    <PopUpWindow center flexDir="column" bgColor='#2b2c2e'>
+                    <PopUpWindow center flexDir="column">
                         <TextAreaWrapper center>
                             <TextArea name="todo" className='text-regular' placeholder={placeHolder} maxLength={90} autoFocus                         
                             onChange={(event) => {
@@ -114,6 +113,7 @@ class PopUp extends PureComponent<PopUpProps, State> {
 export default PopUp
 
 const Bg = styled(Box)`
+    background-color: var(--see-through-color);
     position: absolute;
     width: 100%;
     height: 100%;
@@ -122,6 +122,7 @@ const Bg = styled(Box)`
 `
 
 const PopUpWindow = styled(Box)`
+    background-color: var(--surface-color);
     position: absolute;
     padding: 40px;
     border-radius: 32px;
@@ -156,8 +157,8 @@ const TextAreaWrapperMobile = styled(Box)`
 
 const TextAreaMobile = styled.textarea`
     background-color: transparent;
-    /* width: 270px;
-    height: 150px; */
+    width: 250px;
+    height: 150px;
     border: none;
     resize: none;
     
@@ -167,7 +168,8 @@ const TextAreaMobile = styled.textarea`
 `
 
 const PopUpWindowMobile = styled(Box)`
-    background-color: #2b2c2e;
+    background-color: var(--surface-color);
     flex-direction: column;
     border-radius: 32px;
+    padding: 50px 0px 10px 0px;
 `
