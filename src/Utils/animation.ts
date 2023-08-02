@@ -4,17 +4,19 @@ export function setDefaultValues(list: Array<any>){
     const timeLine = gsap.timeline()
 
     list.map((element, index) => {
-        timeLine.set( `#${element.id}`,{
-            height: '60px',
-            marginTop: (index === 0 ? '0px' : '40px'),
-            opacity: 1,
-            display: 'flex',
-            overflow: 'hidden',
-            ease: 'power2.out',
-            onComplete: () => {
-                console.log('DEFAULT VALUES SET!')
-            }
-        })
+        return(
+            timeLine.set( `#${element.id}`,{
+                height: '60px',
+                marginTop: (index === 0 ? '0px' : '40px'),
+                opacity: 1,
+                display: 'flex',
+                overflow: 'hidden',
+                ease: 'power2.out',
+                onComplete: () => {
+                    console.log('DEFAULT VALUES SET!')
+                }
+            })
+        )
     })
     
 }

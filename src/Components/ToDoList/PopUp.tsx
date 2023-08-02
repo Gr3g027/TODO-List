@@ -4,7 +4,6 @@ import styled from '@emotion/styled'
 import Box from '../Basic/Box'
 import Text from '../Basic/Text';
 import Button from '../Basic/Button';
-import Screen from '../System/Screen';
 
 interface PopUpProps {
     showHandler: any;
