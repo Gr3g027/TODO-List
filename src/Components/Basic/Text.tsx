@@ -32,7 +32,7 @@ const StyledText = styled.p<TextProps>`
     ${({ bold }) => bold && `font-weight: ${bold};`}
     ${({ color }) => color && `color: ${color};`}
     
-    ${({ mar }) => mar ? `margin: ${parseSize(mar)};` : `margin: auto;`}
+    ${({ mar }) => mar ? `margin: ${parseSize(mar)};` : `margin: auto 0px;`}
 	${({ pad }) => pad && `padding: ${parseSize(pad)};`}
 	${({ gap }) => gap && `gap: ${parseSize(gap)};`}
 

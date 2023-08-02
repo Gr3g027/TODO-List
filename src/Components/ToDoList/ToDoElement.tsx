@@ -47,7 +47,7 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
                     }}/>
 
                     {/* todo-text */}
-                    <TextMobile className='text-regular' mar={"5 auto"}>{props.todoData.text}</TextMobile>
+                    <TodoText className='text-regular'>{props.todoData.text}</TodoText>
                 </ToDoMobile>
             ) : (
                 /* DESKTOP */
@@ -67,7 +67,7 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
                     }}/>
 
                     {/* todo-text */}
-                    <Text className='text-regular' mar={"5 auto"} textAlign='left'>{props.todoData.text}</Text>
+                    <TodoText className='text-regular'>{props.todoData.text}</TodoText>
                 </ToDo>
             )}
             
@@ -86,7 +86,7 @@ const ToDo = styled(Box)<BoxProps>`
     display: none;
 `
 
-const TextMobile = styled(Text)`
+const TodoText = styled(Text)`
     text-align: left;
 `
 

@@ -148,7 +148,7 @@ class ToDoList extends PureComponent<Props, State> {
             //delete from list
             todoList.splice(index, 1)
             this.setState({ todos: todoList })
-        }, 700)
+        }, 500)
 
         return todoDeleted
     }
@@ -189,7 +189,7 @@ class ToDoList extends PureComponent<Props, State> {
                     /* MOBILE */ <> 
                         { /* Shows 'PopUp' component if state 'showPopUp' is true */
                             showPopUp && <PopUp responsive={this.props.responsive} addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
-                        <Box center flexDir='column' height='100%' gap={24}>
+                        <MobileLayout center flexDir='column'>
                             <ToDoContainerMobile flex>
                                 <Text width='100%' textAlign='center' className='text-title' mar='30px 0px 64px 0px'>
                                     TODO
@@ -231,15 +231,15 @@ class ToDoList extends PureComponent<Props, State> {
                                     </BtnInnerContainerMobile>
                                 </Button>
                             </Box>
-                        </Box>
+                        </MobileLayout>
                     </>
                 ) : (
                     /* DESKTOP */ <>
                     { /* Shows 'PopUp' component if state 'showPopUp' is true */
                         showPopUp && <PopUp responsive={this.props.responsive} addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
-                        <ExternalContainer center gap={24}>
-                            <ToDoContainer flex flexDir='column'>
-                                <ListContainer id='todo-list' flex flexDir='column' gap={64}>
+                        <DesktopLayout center>
+                            <ToDoContainerDesktop flex flexDir='column'>
+                                <ListContainerDesktop id='todo-list' flex flexDir='column' gap={64}>
                                     <Text className='text-title'>TODO</Text>
                                     { todoList.length !== 0 ? 
                                         <List>
@@ -264,17 +264,17 @@ class ToDoList extends PureComponent<Props, State> {
                                         </List> 
                                         : <></>
                                     }
-                                </ListContainer>
-                            </ToDoContainer>
+                                </ListContainerDesktop>
+                            </ToDoContainerDesktop>
 
                             {/* New ToDo button */}
                             <Button center action={this.showPopUpHandler} actionValue={true}>
-                                <BtnInnerContainer>
+                                <BtnInnerContainerDesktop>
                                     <Icon iconName='addIcon' />
                                     <Text className='text-medium'>Nuova Voce</Text>
-                                </BtnInnerContainer>
+                                </BtnInnerContainerDesktop>
                             </Button>
-                        </ExternalContainer>
+                        </DesktopLayout>
                     </>
                 )}
             </>
@@ -284,14 +284,24 @@ class ToDoList extends PureComponent<Props, State> {
 
 export default ToDoList
 
-const ExternalContainer = styled(Box)`
+
+// Common styles ---------------------------------------
+
+const List = styled(Box)`
+    flex-direction: column;
+`
+
+
+// Desktop styles ---------------------------------------
+
+const DesktopLayout = styled(Box)`
     padding: 9vh 9vw;
     flex-direction: column;
     gap: 24px;
     max-height: 100vh;
 `
 
-const ToDoContainer = styled(Box)`
+const ToDoContainerDesktop = styled(Box)`
     background-color: var(--surface-color);
     box-shadow: var(--def-shadow);
     border-radius: 32px;
@@ -299,7 +309,7 @@ const ToDoContainer = styled(Box)`
     width: 70%;
 `
 
-const ListContainer = styled(Box)`
+const ListContainerDesktop = styled(Box)`
     width: 100%;
     max-height: 50vh;
     overflow-y: scroll;
@@ -313,14 +323,27 @@ const ListContainer = styled(Box)`
     }
 `
 
-const BtnInnerContainer = styled(Box)`
+const BtnInnerContainerDesktop = styled(Box)`
     gap: 24px;
     flex-direction: row;
     padding: 16px 32px;
 `
 
+
+// Mobile styles ---------------------------------------
+
+const MobileLayout = styled(Box)`
+    height: '100%';
+    gap: 24px;
+`
+
+const Line = styled.hr`
+    margin: 0px 20px;
+    width: 80vw;
+`
+
 const ToDoContainerMobile = styled(Box)`
-    background-color: var(--bg-color);;
+    background-color: var(--surface-color);;
     box-shadow: var(--def-shadow);
     flex-direction: column;
     overflow: hidden;
@@ -347,15 +370,6 @@ const ListContainerMobile = styled(Box)`
     }
 `
 
-const Line = styled.hr`
-    margin: 0px 20px;
-    width: 80vw;
-`
-
 const BtnInnerContainerMobile  = styled(Box)`
     padding: 2px 8px;
-`
-
-const List = styled(Box)`
-    flex-direction: column;
 `

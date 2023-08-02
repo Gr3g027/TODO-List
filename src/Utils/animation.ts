@@ -50,7 +50,7 @@ export function DeleteAnimation(id: string, next?: string){
         marginTop: '40px',
         height: '60px',
     }, {
-        duration: 0.5,
+        duration: 0.3,
         opacity: 0,
         marginTop: '0px',
         height: '0px',
