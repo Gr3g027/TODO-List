@@ -5,18 +5,18 @@ import Box, { BoxProps } from '../Basic/Box';
 import Text from '../Basic/Text';
 import styled from '@emotion/styled';
 
-interface ToDoProps extends BoxProps{
+interface ToDoProps extends BoxProps {
     className?: string;
     id: string;
     index: number;
 
     selectAction: any;
     deleteAction: any;
-    todoData: {id: string, text: string, done: boolean};
+    todoData: { id: string, text: string, done: boolean };
 
     responsive?: boolean;
 }
-interface State {}
+interface State { }
 
 class ToDoElement extends PureComponent<ToDoProps, State> {
 
@@ -28,49 +28,48 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
 
         return (
             <>
-            {props.responsive ? (
-                /* MOBILE */
-                <ToDoMobile 
-                    id={props.id} 
-                    className={this.props.className} 
-                    center
+                {props.responsive ? (
+                    /* MOBILE */
+                    <ToDoMobile
+                        id={props.id}
+                        className={this.props.className}
+                        center
                     >
 
-                    {/* delete icon */}
-                    <Icon iconName='binIcon' onClick={() =>{ 
-                        props.deleteAction(props.index)
-                    }}/> 
+                        {/* delete icon */}
+                        <Icon iconName='binIcon' onClick={() => {
+                            props.deleteAction(props.index)
+                        }} />
 
-                    {/* checkbox icon */}
-                    <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
-                        props.selectAction(props.index)
-                    }}/>
+                        {/* checkbox icon */}
+                        <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
+                            props.selectAction(props.index)
+                        }} />
 
-                    {/* todo-text */}
-                    <TodoText className='text-regular'>{props.todoData.text}</TodoText>
-                </ToDoMobile>
-            ) : (
-                /* DESKTOP */
-                <ToDo 
-                    id={props.id} 
-                    className={this.props.className} 
+                        {/* todo-text */}
+                        <TodoText className='text-regular'>{props.todoData.text}</TodoText>
+                    </ToDoMobile>
+                ) : (
+                    /* DESKTOP */
+                    <ToDo
+                        id={props.id}
+                        className={this.props.className}
                     >
 
-                    {/* delete icon */}
-                    <Icon iconName='binIcon' onClick={() =>{ 
-                        props.deleteAction(props.index)
-                    }}/> 
+                        {/* delete icon */}
+                        <Icon iconName='binIcon' onClick={() => {
+                            props.deleteAction(props.index)
+                        }} />
 
-                    {/* checkbox icon */}
-                    <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
-                        props.selectAction(props.index)
-                    }}/>
+                        {/* checkbox icon */}
+                        <Icon iconName={checked ? 'checkBoxIconOn' : 'checkBoxIconOff'} onClick={() => {
+                            props.selectAction(props.index)
+                        }} />
 
-                    {/* todo-text */}
-                    <TodoText className='text-regular'>{props.todoData.text}</TodoText>
-                </ToDo>
-            )}
-            
+                        {/* todo-text */}
+                        <TodoText className='text-regular'>{props.todoData.text}</TodoText>
+                    </ToDo>
+                )}
             </>
         )
     }
@@ -78,7 +77,7 @@ class ToDoElement extends PureComponent<ToDoProps, State> {
 
 export default ToDoElement
 
-const ToDo = styled(Box)<BoxProps>`
+const ToDo = styled(Box) <BoxProps>`
     gap: 24px;
 
     opacity: 0;
@@ -90,7 +89,7 @@ const TodoText = styled(Text)`
     text-align: left;
 `
 
-const ToDoMobile = styled(Box)<BoxProps>`
+const ToDoMobile = styled(Box) <BoxProps>`
     gap: 24px;
 
     opacity: 0;

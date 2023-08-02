@@ -25,7 +25,7 @@ interface State {
     todos: Array<any>;
 
     added: string;
-    selected: {id: string, index: number};
+    selected: { id: string, index: number };
     deleted: string;
 }
 
@@ -39,7 +39,7 @@ class ToDoList extends PureComponent<Props, State> {
 
             added: '',
             deleted: '',
-            selected: {id: '', index: 0},
+            selected: { id: '', index: 0 },
         }
     }
 
@@ -65,11 +65,11 @@ class ToDoList extends PureComponent<Props, State> {
         }
 
         // Refreshing values so that the list stay visible in responsive
-        if (prevProps.responsive !== responsive){
+        if (prevProps.responsive !== responsive) {
             this.updateOrder(todos)
             setDefaultValues(todos)
         }
-        
+
         // Animations
         if (prevState.added !== added) {
             /* Add animation setup */
@@ -91,7 +91,7 @@ class ToDoList extends PureComponent<Props, State> {
             const isFirst = nextIndex === 1 ? true : false
 
             let nextId
-            if(todos.length - 1 >= nextIndex && isFirst){
+            if (todos.length - 1 >= nextIndex && isFirst) {
                 nextId = todos[nextIndex].id
                 DeleteAnimation(deleted, nextId)
             }
@@ -102,13 +102,13 @@ class ToDoList extends PureComponent<Props, State> {
 
         if (prevState.selected !== selected) {
             /* Select animation setup */
-            if (todos.length !== 1 || selected.index !== todos.length - 1){
+            if (todos.length !== 1 || selected.index !== todos.length - 1) {
                 SelectAnimation(selected.id, todos[0].id)
             } else {
                 setDefaultValues(todos)
             }
         }
-    }      
+    }
 
     showPopUpHandler = (value: boolean) => {
         // Used for updating show state in child component "PopUp"
@@ -125,7 +125,7 @@ class ToDoList extends PureComponent<Props, State> {
         }
 
         //set state for the add animation
-        this.setState({ added: todo.id }) 
+        this.setState({ added: todo.id })
 
         //creating two lists so that new todo can be placed before selected ones, but after unselected ones
         const selectedList = todoList.filter((todo) => todo.done === true)
@@ -141,10 +141,10 @@ class ToDoList extends PureComponent<Props, State> {
         const todoList = getJson()
         const todoDeleted = todoList.find((todo: any) => todo.id === todoList[index].id)
 
-        this.setState({deleted: todoDeleted.id})
+        this.setState({ deleted: todoDeleted.id })
 
         //timeout for delete animation
-        setTimeout(()=>{ 
+        setTimeout(() => {
             //delete from list
             todoList.splice(index, 1)
             this.setState({ todos: todoList })
@@ -161,12 +161,12 @@ class ToDoList extends PureComponent<Props, State> {
         //changing 'selected' class by modifying 'done' property
         if (todoList[index].done) {
             todoList[index].done = false
-            this.setState({selected: {id: todoList[index].id, index: index}})
+            this.setState({ selected: { id: todoList[index].id, index: index } })
         } else {
             todoList[index].done = true
-            this.setState({selected: {id: todoList[index].id, index: index}})
+            this.setState({ selected: { id: todoList[index].id, index: index } })
         }
-        
+
         this.setState({ todos: todoList })
 
         //update order
@@ -177,7 +177,6 @@ class ToDoList extends PureComponent<Props, State> {
         /* Updates the array order, sorts by boolean value 'done' */
         todoList.sort((a, b) => Number(a.done) - Number(b.done)) //false-first
         this.setState({ todos: todoList })
-        console.log("ORDER ", todoList)
     };
 
     render(): ReactNode {
@@ -185,8 +184,8 @@ class ToDoList extends PureComponent<Props, State> {
         const todoList = this.state.todos
         return (
             <>
-                { this.props.responsive ? (
-                    /* MOBILE */ <> 
+                {this.props.responsive ? (
+                    /* MOBILE */ <>
                         { /* Shows 'PopUp' component if state 'showPopUp' is true */
                             showPopUp && <PopUp responsive={this.props.responsive} addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
                         <MobileLayout center flexDir='column'>
@@ -196,27 +195,27 @@ class ToDoList extends PureComponent<Props, State> {
                                 </Text>
                                 <Line />
                                 <ListContainerMobile id='todo-list'>
-                                    { todoList.length !== 0 ? 
+                                    {todoList.length !== 0 ?
                                         <List>
-                                        {
-                                            // Rendering ToDo list
-                                            todoList.map((todo: any, index: number) => {
-                                                return (
-                                                    <ToDoElement
-                                                        key={todo.id}
-                                                        
-                                                        id={todo.id}
-                                                        index={index}
-                                                        className={todo.done ? 'selected' : ''}
+                                            {
+                                                // Rendering ToDo list
+                                                todoList.map((todo: any, index: number) => {
+                                                    return (
+                                                        <ToDoElement
+                                                            key={todo.id}
 
-                                                        todoData={todo}
-                                                        deleteAction={this.deleteTodo}
-                                                        selectAction={this.selectToDo}
-                                                    />
-                                                )
-                                            })
-                                        }
-                                        </List> 
+                                                            id={todo.id}
+                                                            index={index}
+                                                            className={todo.done ? 'selected' : ''}
+
+                                                            todoData={todo}
+                                                            deleteAction={this.deleteTodo}
+                                                            selectAction={this.selectToDo}
+                                                        />
+                                                    )
+                                                })
+                                            }
+                                        </List>
                                         : <></>
                                     }
                                 </ListContainerMobile>
@@ -235,33 +234,33 @@ class ToDoList extends PureComponent<Props, State> {
                     </>
                 ) : (
                     /* DESKTOP */ <>
-                    { /* Shows 'PopUp' component if state 'showPopUp' is true */
-                        showPopUp && <PopUp responsive={this.props.responsive} addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
+                        { /* Shows 'PopUp' component if state 'showPopUp' is true */
+                            showPopUp && <PopUp responsive={this.props.responsive} addToDo={this.addToDo} showHandler={this.showPopUpHandler} />}
                         <DesktopLayout center>
                             <ToDoContainerDesktop flex flexDir='column'>
                                 <ListContainerDesktop id='todo-list' flex flexDir='column' gap={64}>
                                     <Text className='text-title'>TODO</Text>
-                                    { todoList.length !== 0 ? 
+                                    {todoList.length !== 0 ?
                                         <List>
-                                        {
-                                            // Rendering ToDo list
-                                            todoList.map((todo: any, index: number) => {
-                                                return (
-                                                    <ToDoElement
-                                                        key={todo.id}
-                                                        
-                                                        id={todo.id}
-                                                        index={index}
-                                                        className={todo.done ? 'selected' : ''}
+                                            {
+                                                // Rendering ToDo list
+                                                todoList.map((todo: any, index: number) => {
+                                                    return (
+                                                        <ToDoElement
+                                                            key={todo.id}
 
-                                                        todoData={todo}
-                                                        deleteAction={this.deleteTodo}
-                                                        selectAction={this.selectToDo}
-                                                    />
-                                                )
-                                            })
-                                        }
-                                        </List> 
+                                                            id={todo.id}
+                                                            index={index}
+                                                            className={todo.done ? 'selected' : ''}
+
+                                                            todoData={todo}
+                                                            deleteAction={this.deleteTodo}
+                                                            selectAction={this.selectToDo}
+                                                        />
+                                                    )
+                                                })
+                                            }
+                                        </List>
                                         : <></>
                                     }
                                 </ListContainerDesktop>
@@ -370,6 +369,6 @@ const ListContainerMobile = styled(Box)`
     }
 `
 
-const BtnInnerContainerMobile  = styled(Box)`
+const BtnInnerContainerMobile = styled(Box)`
     padding: 2px 8px;
 `

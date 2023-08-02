@@ -12,9 +12,6 @@ export function setDefaultValues(list: Array<any>){
                 display: 'flex',
                 overflow: 'hidden',
                 ease: 'power2.out',
-                onComplete: () => {
-                    console.log('DEFAULT VALUES SET!')
-                }
             })
         )
     })
@@ -32,9 +29,6 @@ export function AddAnimation(id: string, isFirst: boolean, next?: string){
         display: 'flex',
         overflow: 'hidden',
         ease: 'power2.out',
-        onComplete: function() {
-          console.log("Add animation completed!");
-        }
     })
 
     if(next){
@@ -57,9 +51,6 @@ export function DeleteAnimation(id: string, next?: string){
         marginTop: '0px',
         height: '0px',
         ease: 'power2.out',
-        onComplete: () => {
-            console.log("Delete animation completed!");
-        }
     })
     if(next){
         timeLine.to(`#${next}`, {
@@ -77,9 +68,6 @@ export function SelectAnimation(id: string, newFirstId: string){
         height: '0px',
         overflow: 'hidden',
         display: 'none',
-        onComplete: () => {
-            console.log("Select animation complete!")
-        }
     }, {
         duration: 0.5,
         opacity: 1,
@@ -87,9 +75,6 @@ export function SelectAnimation(id: string, newFirstId: string){
         marginTop: '40px',
         overflow: 'hidden',
         display: 'flex',
-        onComplete: () => {
-            console.log("Select animation complete!")
-        }
     })
 
     if (newFirstId) {
@@ -97,17 +82,4 @@ export function SelectAnimation(id: string, newFirstId: string){
             marginTop: '0px'
         })
     }
-}
-
-export function ListItemsMapAnimation(index: number, id: string){
-    gsap
-    .to(`#${id}`, {
-        duration: 0.5,
-        opacity: 1,
-        height: '100%',
-        marginTop: '40px',
-        display: 'flex',
-        ease: 'none',
-        delay: (index) * 0.2,
-    })
 }

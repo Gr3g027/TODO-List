@@ -73,10 +73,10 @@ class PopUp extends PureComponent<PopUpProps, State> {
                         <PopUpWindowMobile center>
                             <TextAreaWrapperMobile center>
                                 <TextAreaMobile
-                                    name="todoInput" 
-                                    className='text-regular' 
-                                    placeholder={placeHolder} 
-                                    maxLength={90} 
+                                    name="todoInput"
+                                    className='text-regular'
+                                    placeholder={placeHolder}
+                                    maxLength={90}
                                     autoFocus
                                     onChange={(event) => {
                                         this.setState({ input: event.target.value })
