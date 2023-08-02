@@ -3,8 +3,8 @@
 import { PureComponent, ReactNode } from "react";
 import ToDoList from "../ToDoList/ToDoList";
 
-interface Props {}
-interface State{
+interface Props { }
+interface State {
     responsive: boolean
 }
 class Screen extends PureComponent<Props, State>{
@@ -13,7 +13,7 @@ class Screen extends PureComponent<Props, State>{
     constructor(props: Props) {
         super(props)
 
-        this.mobileWidth = 768; 
+        this.mobileWidth = 768;
 
         this.state = {
             responsive: window.innerWidth <= this.mobileWidth,
@@ -23,7 +23,7 @@ class Screen extends PureComponent<Props, State>{
     }
 
     handleResize = () => {
-        this.setState({ responsive: (window.innerWidth <= this.mobileWidth) ? true : false});
+        this.setState({ responsive: (window.innerWidth <= this.mobileWidth) ? true : false });
     }
 
     componentDidMount(): void {
@@ -39,7 +39,7 @@ class Screen extends PureComponent<Props, State>{
 
         return (
             <>
-                <ToDoList responsive={responsive}/>
+                <ToDoList responsive={responsive} />
             </>
         )
     }

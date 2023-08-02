@@ -32,13 +32,6 @@ body {
     text-decoration: line-through;
 }
 
-.todo-element {
-    height: 60px !important;
-    opacity: 1 !important;
-    display: flex !important;
-    transition: all 0.5s ease-in-out !important;
-}
-
 .text-title {
     text-align: left;
     width: 100%;
@@ -52,6 +45,7 @@ body {
     font-weight: 400;
     color: white;
     user-select: text;
+    text-align: left;
 }
 
 .text-medium{

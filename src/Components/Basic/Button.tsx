@@ -5,7 +5,7 @@ import { BoxProps } from './Box'
 
 import { parseSize } from '../../Utils/utils';
 
-export interface BtnProps extends BoxProps{
+export interface BtnProps extends BoxProps {
     action: (params?: any | Array<any>) => any;
     actionValue?: any;
 }
@@ -16,10 +16,11 @@ class Button extends PureComponent<BtnProps> {
         const props = this.props
         const { actionValue, action } = this.props
         return (
-            <StyledButton 
+            <StyledButton
                 {...props}
-                onClick={() => { actionValue ? action(actionValue) : action()
-            }}/>
+                onClick={() => {
+                    actionValue ? action(actionValue) : action()
+                }} />
         )
     }
 }

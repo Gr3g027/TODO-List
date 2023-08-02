@@ -7,7 +7,7 @@ export interface BoxProps {
 	children?: React.ReactNode | any;
 	className?: string;
 	id?: any;
-	
+
 	onClick?: (item?: any) => void;
 	center?: boolean;
 
