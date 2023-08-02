@@ -196,23 +196,28 @@ class ToDoList extends PureComponent<Props, State> {
                                 </Text>
                                 <Line />
                                 <ListContainerMobile id='todo-list'>
-                                    {
-                                        // Rendering ToDo list
-                                        todoList.map((todo: any, index: number) => {
-                                            return (
-                                                <ToDoElement
-                                                    key={todo.id}
+                                    { todoList.length !== 0 ? 
+                                        <List>
+                                        {
+                                            // Rendering ToDo list
+                                            todoList.map((todo: any, index: number) => {
+                                                return (
+                                                    <ToDoElement
+                                                        key={todo.id}
+                                                        
+                                                        id={todo.id}
+                                                        index={index}
+                                                        className={todo.done ? 'selected' : ''}
 
-                                                    id={todo.id}
-                                                    index={index}
-                                                    className={todo.done ? 'selected' : ''}
-
-                                                    todoData={todo}
-                                                    deleteAction={this.deleteTodo}
-                                                    selectAction={this.selectToDo}
-                                                />
-                                            )
-                                        })
+                                                        todoData={todo}
+                                                        deleteAction={this.deleteTodo}
+                                                        selectAction={this.selectToDo}
+                                                    />
+                                                )
+                                            })
+                                        }
+                                        </List> 
+                                        : <></>
                                     }
                                 </ListContainerMobile>
                             </ToDoContainerMobile>
@@ -337,7 +342,6 @@ const ListContainerMobile = styled(Box)`
     ::-webkit-scrollbar-track {
         visibility: hidden;
     }
-
     ::-webkit-scrollbar-thumb {
         visibility: hidden;
     }
