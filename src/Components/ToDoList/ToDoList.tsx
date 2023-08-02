@@ -13,7 +13,6 @@ import { getJson, saveJson } from '../../Utils/utils'
 import {
     AddAnimation,
     DeleteAnimation,
-    ListItemsMapAnimation,
     SelectAnimation,
 } from '../../Utils/animation'
 
@@ -25,7 +24,7 @@ interface State {
     todos: Array<any>;
 
     added: string;
-    selected: {id: string, action: boolean};
+    selected: {id: string, index: number};
     deleted: string;
 }
 
@@ -38,8 +37,8 @@ class ToDoList extends PureComponent<Props, State> {
             todos: [],
 
             added: '',
-            selected: {id: '', action: false},
             deleted: '',
+            selected: {id: '', index: 0},
         }
     }
 
@@ -47,40 +46,47 @@ class ToDoList extends PureComponent<Props, State> {
         // Retriveing localStorage data, if it exists
         const todoList = getJson()
         if (todoList) {
-            this.setState({ todos: todoList })
+            this.setState({ todos: todoList }, () => {
+                // Setting the list visible on refresh
+                this.rightValues() 
+            })
         }
     }
 
     componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
-        const { todos, added, selected, deleted } = this.state
+        const { todos, added, deleted, selected } = this.state
+        const { responsive } = this.props
 
         // Saving in local storage every time the 'todos' state changes
         if (prevState.todos !== todos) {
             saveJson(todos);
         }
 
+        // Refreshing values so that the list stay visible in responsive
+        if (prevProps.responsive !== responsive){
+            this.rightValues()
+        }
+        
         // Animations
         if (prevState.added !== added) {
+            /* Add animation setup */
             const isFirst = todos.findIndex((todo) => todo.id === added) === 0 ? true : false
             const nextIndex = todos.findIndex((todo) => todo.id === added) + 1
 
-            const addedTodoIndex = todos.findIndex((todo) => todo.id === added)
-            const elementsUnder = todos.slice(addedTodoIndex + 1)
-
             let nextId
-            // console.log(todos.length - 1,  todos[nextIndex])
             if (todos.length - 1 >= nextIndex && nextIndex === 1) {
                 nextId = todos[nextIndex].id
-                AddAnimation(added, elementsUnder, isFirst, nextId)
+                AddAnimation(added, isFirst, nextId)
+            } else {
+                AddAnimation(added, isFirst)
             }
-
-            AddAnimation(added, elementsUnder, isFirst)
         }
 
         if (prevState.deleted !== deleted) {
+            /* Delete animation setup */
             const nextIndex = todos.findIndex((todo) => todo.id === deleted) + 1
             const isFirst = nextIndex === 1 ? true : false
-            console.log(nextIndex, isFirst)
+
             let nextId
             if(todos.length - 1 >= nextIndex && isFirst){
                 nextId = todos[nextIndex].id
@@ -88,34 +94,29 @@ class ToDoList extends PureComponent<Props, State> {
             }
             else {
                 DeleteAnimation(deleted)
-            }           
+            }
         }
 
-        // if (prevState.selected !== selected) {
-        //     const indexOfSel = todos.findIndex((todo) => todo.id === selected)
-            
-        //     const todosUnderneath = todos.length === 1 ? [] : todos.slice(indexOfSel + 1)
-        //     SelectAnimation(selected.id, selected.action, this.getDestinationIndex(todos, indexOfSel))
-        //     moveElementsUnderneath(todosUnderneath)
-        // }
+        if (prevState.selected !== selected) {
+            /* Select animation setup */
+            if (todos.length !== 1 || selected.index === todos.length - 1){
+                SelectAnimation(selected.id, selected.index)
+            } else {
+                this.rightValues()
+            }
+        }
     }
 
-    getDestinationIndex = (todos: Array<any>, todoIndex: number): number => {
-        const firstDone = todos.findIndex((todo) => todo.done === true && todo.id !== todos.find(() => todoIndex).id)
-        let indexToMove: number = 0
-
-        if (todos.length === 0 || firstDone === todoIndex + 1){
-            indexToMove = 0
-        } 
-        else if (firstDone !== -1 ) {
-            indexToMove = firstDone
+    rightValues = () => {
+        //refreshing default values for elements
+        if (this.state.todos[0] && document.getElementById(this.state.todos[0].id) !== null){
+            this.state.todos.map((todo, index) => {
+                const docElement = document.getElementById(todo.id)
+                docElement!.classList.add('todo-element')
+                docElement!.style.marginTop = index === 0 ? '0px' : '40px'
+            })
         }
-        else {
-            indexToMove = todos.length - 1
-        }
-
-        return indexToMove
-    }
+    }        
 
     showPopUpHandler = (value: boolean) => {
         // Used for updating show state in child component "PopUp"
@@ -138,7 +139,7 @@ class ToDoList extends PureComponent<Props, State> {
         const selectedList = todoList.filter((todo) => todo.done === true)
         const unselectedList = todoList.filter((todo) => todo.done === false)
 
-        //add
+        //add to list
         let newList = [...unselectedList, todo, ...selectedList]
         this.setState({ todos: newList })
     }
@@ -150,8 +151,9 @@ class ToDoList extends PureComponent<Props, State> {
 
         this.setState({deleted: todoDeleted.id})
 
-        setTimeout(()=>{
-            //delete
+        //timeout for delete animation
+        setTimeout(()=>{ 
+            //delete from list
             todoList.splice(index, 1)
             this.setState({ todos: todoList })
         }, 700)
@@ -167,36 +169,23 @@ class ToDoList extends PureComponent<Props, State> {
         //changing 'selected' class by modifying 'done' property
         if (todoList[index].done) {
             todoList[index].done = false
-            // console.log(todoList[index].text, " unselected!")
-            this.setState({selected: {id: todoList[index].id, action: false}})
+            this.setState({selected: {id: todoList[index].id, index: index }})
         } else {
             todoList[index].done = true
-            const todoSelected = todoList.find((todo: any) => todo.id === todoList[index].id)
-            // console.log(todoSelected.text, " selected!")
-            this.setState({selected: {id: todoList[index].id, action: true}})
+            this.setState({selected: {id: todoList[index].id, index: index }})
         }
-        
-        
-        const todoSelected = todoList.find((todo: any) => todo.id === todoList[index].id)
         
         this.setState({ todos: todoList })
 
-
         //update order
-        // this.updateOrder(todoList)
+        this.updateOrder(todoList)
     }
 
     updateOrder = (todoList: Array<any>) => {
         /* Updates the array order, sorts by boolean value 'done' */
         todoList.sort((a, b) => Number(a.done) - Number(b.done)) //false-first
         this.setState({ todos: todoList })
-
-
-        // TODO find another way to refresh the list
-        //animation for showing list on refresh
-        todoList.map((todo, index) => {
-            return ListItemsMapAnimation(index, todo.id)
-        })
+        console.log("ORDER ", todoList)
     };
 
     render(): ReactNode {
@@ -224,7 +213,7 @@ class ToDoList extends PureComponent<Props, State> {
 
                                                     id={todo.id}
                                                     index={index}
-                                                    className={todo.done ? 'todo-element selected' : 'todo-element'}
+                                                    className={todo.done ? 'selected' : ''}
 
                                                     todoData={todo}
                                                     deleteAction={this.deleteTodo}
@@ -263,10 +252,10 @@ class ToDoList extends PureComponent<Props, State> {
                                                 return (
                                                     <ToDoElement
                                                         key={todo.id}
-
+                                                        
                                                         id={todo.id}
                                                         index={index}
-                                                        className={todo.done ? 'todo-element selected' : 'todo-element'}
+                                                        className={todo.done ? 'selected' : ''}
 
                                                         todoData={todo}
                                                         deleteAction={this.deleteTodo}

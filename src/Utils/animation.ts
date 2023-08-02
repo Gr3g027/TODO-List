@@ -1,6 +1,6 @@
 import { gsap } from 'gsap'
 
-export function AddAnimation(id: string, elementsUnderneath: Array<any>, isFirst: boolean, next?: string){
+export function AddAnimation(id: string, isFirst: boolean, next?: string){
     const timeLine = gsap.timeline()
 
     timeLine.to(`#${id}`, {
@@ -29,8 +29,8 @@ export function DeleteAnimation(id: string, next?: string){
     timeLine.to(`#${id}`, {
         duration: 0.5,
         opacity: 0,
-        marginTop: 0,
-        height: 0,
+        marginTop: '0px',
+        height: '0px',
         ease: 'power2.out',
         onComplete: () => {
             console.log("Delete animation completed!");
@@ -43,29 +43,29 @@ export function DeleteAnimation(id: string, next?: string){
     }
 }
 
-export function SelectAnimation(id: string, selected: boolean, indexToMove: number){
+/* Tried to do select animation */
+export function SelectAnimation(id: string, index: number){  
     const timeLine = gsap.timeline()
-    
-    selected 
-    ? timeLine.from(`#${id}`, {
+
+    timeLine.fromTo(`#${id}`, {
+        opacity: 0,
+        height: '0px',
+        overflow: 'hidden',
+        display: 'none',
+        onComplete: () => {
+            console.log("Select animation complete!")
+        }
+    }, {
         duration: 0.5,
-        y: ((indexToMove) * 100),
         opacity: 1,
-        ease: "none",
-        onComplete: function() {
-          console.log("Select animation completed!");
+        height: '60px',
+        marginTop: '40px',
+        overflow: 'hidden',
+        display: 'flex',
+        onComplete: () => {
+            console.log("Select animation complete!")
         }
     })
-    : timeLine.from(`#${id}`, {
-        duration: 0.5,
-        y: ((indexToMove) * -100),
-        opacity: 1,
-        ease: "none",
-        onComplete: function() {
-          console.log("Select animation completed!");
-        }
-    })
-    
 }
 
 export function ListItemsMapAnimation(index: number, id: string){
